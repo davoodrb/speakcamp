@@ -1,19 +1,4 @@
 services:
-  redis:
-    image: redis:8-alpine
-    container_name: redis8
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes --appendfsync everysec
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
   postgres:
     image: postgres:18
     container_name: postgres18
@@ -31,18 +16,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  # Optional: Redis Commander for GUI management (useful for debugging)
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    container_name: redis-commander
-    environment:
-      - REDIS_HOSTS=local:redis:6379
-    ports:
-      - "8081:8081"
-    depends_on:
-      - redis
-    restart: unless-stopped
 
 volumes:
   redis_data:

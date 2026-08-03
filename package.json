@@ -13,7 +13,13 @@
     "test": "vitest run",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check"
+    "check": "biome check",
+    "prepare": "husky"
+  },
+   "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "biome check --write"
+    ]
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -61,7 +67,9 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.1",
+    "husky": "^9.1.7",
     "jsdom": "^28.1.0",
+    "lint-staged": "^17.3.0",
     "prisma": "^7.8.0",
     "typescript": "^6.0.2",
     "vite": "^8.1.4",
