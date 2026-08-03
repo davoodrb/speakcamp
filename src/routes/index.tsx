@@ -1,21 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Button } from "#/components/ui/button";
-import RoomsList from "#/features/room/components/RoomsList";
-import { fetchRoomsAction } from "#/features/room/lib/room.functions";
+import { createFileRoute } from "@tanstack/react-router";
+import Header from "#/components/layout/header";
+import { authClient } from "#/features/auth/lib/auth-client";
 
 export const Route = createFileRoute("/")({
 	component: Home,
-	loader: async () => await fetchRoomsAction(),
 });
 
 function Home() {
-	const rooms = Route.useLoaderData();
+	const { data: session, isPending } = authClient.useSession();
 
-	return (
-		<div>
-			<div className="max-w-md mx-auto mt-16">
-				<RoomsList data={rooms} />
-			</div>
-		</div>
-	);
+	return <Header user={session?.user} userIsPending={isPending} />;
 }

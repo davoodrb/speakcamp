@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import Header from "#/components/layout/header";
+import { ThemeProvider } from "#/components/layout/theme-provider";
 import { Toaster } from "#/components/ui/sonner";
 import appCss from "../styles.css?url";
 
@@ -36,31 +36,32 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
 			<body>
 				<QueryClientProvider client={queryClient}>
-					<Header />
-					{children}
-					<Toaster richColors />
-					<TanStackDevtools
-						config={{
-							position: "bottom-right",
-						}}
-						plugins={[
-							{
-								name: "Tanstack Router",
-								render: <TanStackRouterDevtoolsPanel />,
-							},
-							{
-								name: "Tanstack Query",
-								render: <ReactQueryDevtoolsPanel />,
-							},
-							formDevtoolsPlugin(),
-						]}
-					/>
+					<ThemeProvider defaultTheme="system" storageKey="theme">
+						{children}
+						<Toaster richColors />
+						<TanStackDevtools
+							config={{
+								position: "bottom-right",
+							}}
+							plugins={[
+								{
+									name: "Tanstack Router",
+									render: <TanStackRouterDevtoolsPanel />,
+								},
+								{
+									name: "Tanstack Query",
+									render: <ReactQueryDevtoolsPanel />,
+								},
+								formDevtoolsPlugin(),
+							]}
+						/>
+					</ThemeProvider>
 					<Scripts />
 				</QueryClientProvider>
 			</body>
