@@ -1,9 +1,11 @@
-export type Rooms = Room[];
+import type { Language, Level } from "#/generated/prisma/enums";
 
+export type Rooms = Room[];
 export interface Room {
 	id: string;
-	title: string;
-	language: string;
+	desc?: string;
+	language: Language;
+	level: Level;
 	createdBy: string;
 	createdAt: Date;
 }

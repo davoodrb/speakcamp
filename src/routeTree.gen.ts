@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AthenticatedRouteImport } from './routes/_athenticated'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as AthenticatedRoomIdRouteImport } from './routes/_athenticated/room/$id'
 import { Route as AthenticatedRoomCreateRouteImport } from './routes/_athenticated/room/create'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AuthSignUpIndexRouteImport } from './routes/auth/sign-up/index'
@@ -36,6 +37,11 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthRoute,
 } as any)
+const AthenticatedRoomIdRoute = AthenticatedRoomIdRouteImport.update({
+  id: '/room/$id',
+  path: '/room/$id',
+  getParentRoute: () => AthenticatedRoute,
+} as any)
 const AthenticatedRoomCreateRoute = AthenticatedRoomCreateRouteImport.update({
   id: '/room/create',
   path: '/room/create',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/auth/': typeof AuthIndexRoute
+  '/room/$id': typeof AthenticatedRoomIdRoute
   '/room/create': typeof AthenticatedRoomCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/auth/sign-up/': typeof AuthSignUpIndexRoute
@@ -63,6 +70,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthIndexRoute
+  '/room/$id': typeof AthenticatedRoomIdRoute
   '/room/create': typeof AthenticatedRoomCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/auth/sign-up': typeof AuthSignUpIndexRoute
@@ -73,6 +81,7 @@ export interface FileRoutesById {
   '/_athenticated': typeof AthenticatedRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/auth/': typeof AuthIndexRoute
+  '/_athenticated/room/$id': typeof AthenticatedRoomIdRoute
   '/_athenticated/room/create': typeof AthenticatedRoomCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/auth/sign-up/': typeof AuthSignUpIndexRoute
@@ -80,15 +89,28 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/auth/' | '/room/create' | '/api/auth/$' | '/auth/sign-up/'
+    | '/'
+    | '/auth'
+    | '/auth/'
+    | '/room/$id'
+    | '/room/create'
+    | '/api/auth/$'
+    | '/auth/sign-up/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/room/create' | '/api/auth/$' | '/auth/sign-up'
+  to:
+    | '/'
+    | '/auth'
+    | '/room/$id'
+    | '/room/create'
+    | '/api/auth/$'
+    | '/auth/sign-up'
   id:
     | '__root__'
     | '/'
     | '/_athenticated'
     | '/auth'
     | '/auth/'
+    | '/_athenticated/room/$id'
     | '/_athenticated/room/create'
     | '/api/auth/$'
     | '/auth/sign-up/'
@@ -131,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_athenticated/room/$id': {
+      id: '/_athenticated/room/$id'
+      path: '/room/$id'
+      fullPath: '/room/$id'
+      preLoaderRoute: typeof AthenticatedRoomIdRouteImport
+      parentRoute: typeof AthenticatedRoute
+    }
     '/_athenticated/room/create': {
       id: '/_athenticated/room/create'
       path: '/room/create'
@@ -156,10 +185,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AthenticatedRouteChildren {
+  AthenticatedRoomIdRoute: typeof AthenticatedRoomIdRoute
   AthenticatedRoomCreateRoute: typeof AthenticatedRoomCreateRoute
 }
 
 const AthenticatedRouteChildren: AthenticatedRouteChildren = {
+  AthenticatedRoomIdRoute: AthenticatedRoomIdRoute,
   AthenticatedRoomCreateRoute: AthenticatedRoomCreateRoute,
 }
 

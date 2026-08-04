@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Button } from "#/components/ui/button";
+import { buttonVariants } from "#/components/ui/button";
 import { Skeleton } from "#/components/ui/skeleton";
 import MenuSheet from "./menu-sheet";
 import ModeToggle from "./mode-toggle";
@@ -9,7 +9,7 @@ function Header({
 	userIsPending,
 }: {
 	user?: object;
-	userIsPending: boolean;
+	userIsPending?: boolean;
 }) {
 	return (
 		<header className="flex items-center justify-between p-4">
@@ -26,9 +26,13 @@ function Header({
 				{userIsPending ? (
 					<Skeleton className="w-16 self-stretch" />
 				) : user ? (
-					<Button render={<Link to="/auth" />}>Profile</Button>
+					<Link to="/auth" className={buttonVariants()}>
+						Profile
+					</Link>
 				) : (
-					<Button render={<Link to="/auth" />}>Sign in</Button>
+					<Link to="/auth" className={buttonVariants()}>
+						Sign in
+					</Link>
 				)}
 				<MenuSheet />
 			</div>

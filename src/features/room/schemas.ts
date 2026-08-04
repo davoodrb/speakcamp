@@ -1,13 +1,10 @@
 import z from "zod";
 import { Language, Level } from "#/generated/prisma/enums";
 
-export const languageValues = Object.values(Language);
-export const levelValues = Object.values(Level);
-
 export const createRoomFormSchema = z.object({
+	level: z.enum(Level),
+	language: z.enum(Language),
 	desc: z.string().optional(),
-	language: z.enum(languageValues, { error: "Language is required" }),
-	level: z.enum(levelValues, { error: "Level is required" }),
 });
 
-export type CreateRoomFormValues = z.infer<typeof createRoomFormSchema>;
+export type CreateRoomForm = z.infer<typeof createRoomFormSchema>;

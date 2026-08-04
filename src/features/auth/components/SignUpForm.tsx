@@ -137,7 +137,7 @@ function SignUpForm() {
 			<div className="text-sm">
 				<span>Already have an account?</span>
 				<Button variant="link">
-					<Link to="/auth">Signin</Link>
+					<Link to="/auth">sign in</Link>
 				</Button>
 			</div>
 		</div>

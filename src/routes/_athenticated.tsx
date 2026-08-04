@@ -4,7 +4,7 @@ import { getSession } from "#/features/auth/lib/auth.functions";
 
 export const Route = createFileRoute("/_athenticated")({
 	component: AuthenticatedLayout,
-	beforeLoad: async ({ location }) => {
+	beforeLoad: async ({ context, location }) => {
 		const session = await getSession();
 
 		if (!session?.session) {
@@ -15,13 +15,17 @@ export const Route = createFileRoute("/_athenticated")({
 				},
 			});
 		}
+
+		return { ...context, session };
 	},
 });
 
 function AuthenticatedLayout() {
+	const { session } = Route.useRouteContext();
+
 	return (
 		<>
-			<Header />
+			<Header user={session.user} />
 			<Outlet />
 		</>
 	);

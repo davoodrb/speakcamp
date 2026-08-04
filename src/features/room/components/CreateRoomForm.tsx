@@ -1,4 +1,5 @@
-import { useForm } from "@tanstack/react-form-start";
+import { useForm, useSelector } from "@tanstack/react-form-start";
+import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "#/components/ui/button";
 import {
@@ -8,6 +9,8 @@ import {
 	FieldLabel,
 } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
+import { Spinner } from "#/components/ui/spinner";
+import { Language, Level } from "#/generated/prisma/enums";
 import {
 	Select,
 	SelectContent,
@@ -18,124 +21,154 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { createRoomAction } from "../lib/room.functions";
-import {
-	type CreateRoomFormValues,
-	createRoomFormSchema,
-	languageValues,
-	levelValues,
-} from "../schemas";
+import { createRoomFormSchema } from "../schemas";
+
+const languageValues = Object.values(Language);
+const levelValues = Object.values(Level);
 
 function CreateRoomForm() {
+	const router = useRouter();
+
 	const form = useForm({
 		defaultValues: {
+			language: null as Language | null,
+			level: null as Level | null,
 			desc: "",
-			language: "" as CreateRoomFormValues["language"],
-			level: "" as CreateRoomFormValues["level"],
-		},
-		validators: {
-			onSubmit: createRoomFormSchema,
 		},
 
 		onSubmit: async ({ value }) => {
-			const res = await createRoomAction({ data: value });
+			try {
+				const parsed = createRoomFormSchema.safeParse(value);
 
-			if (res.success) {
-				toast.success(res.message);
-			} else {
-				toast.error(res.message);
+				if (!parsed.success) {
+					return parsed.error.flatten();
+				}
+
+				const res = await createRoomAction({ data: parsed.data });
+
+				if (res.error || !res.data?.id) {
+					throw new Error();
+				}
+
+				toast.success(`Room successfully created`);
+				router.navigate({ to: "/room/$id", params: { id: res.data.id } });
+			} catch (error) {
+				if (error instanceof Error) {
+					toast.error(error.message);
+				} else {
+					toast.error("Something went wrong!");
+				}
+				return 0;
 			}
 		},
 	});
 
-	return (
-		<form
-			onSubmit={(e) => {
-				e.preventDefault();
-				form.handleSubmit();
-			}}
-			className="space-y-6"
-		>
-			<FieldGroup>
-				<form.Field name="language">
-					{(field) => {
-						const isInvalid =
-							field.state.meta.isTouched && !field.state.meta.isValid;
-						return (
-							<Field data-invalid={isInvalid}>
-								<FieldLabel htmlFor={field.name}>Language *</FieldLabel>
-								<Select onValueChange={(e) => field.handleChange(e)}>
-									<SelectTrigger className="w-full max-w-48">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											<SelectLabel>Fruits</SelectLabel>
-											{languageValues.map((language) => (
-												<SelectItem key={language} value={language}>
-													{language}
-												</SelectItem>
-											))}
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-								{isInvalid && <FieldError errors={field.state.meta.errors} />}
-							</Field>
-						);
-					}}
-				</form.Field>
-				<form.Field name="level">
-					{(field) => {
-						const isInvalid =
-							field.state.meta.isTouched && !field.state.meta.isValid;
-						return (
-							<Field data-invalid={isInvalid}>
-								<FieldLabel htmlFor={field.name}>Level *</FieldLabel>
-								<Select onValueChange={(e) => field.handleChange(e)}>
-									<SelectTrigger className="w-full max-w-48">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											<SelectLabel>Fruits</SelectLabel>
-											{levelValues.map((level) => (
-												<SelectItem key={level} value={level}>
-													{level}
-												</SelectItem>
-											))}
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-								{isInvalid && <FieldError errors={field.state.meta.errors} />}
-							</Field>
-						);
-					}}
-				</form.Field>
-				<form.Field name="desc">
-					{(field) => {
-						const isInvalid =
-							field.state.meta.isTouched && !field.state.meta.isValid;
-						return (
-							<Field data-invalid={isInvalid}>
-								<FieldLabel htmlFor={field.name}>Description</FieldLabel>
-								<Input
-									id={field.name}
-									name={field.name}
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-									aria-invalid={isInvalid}
-									placeholder="Random thoughts"
-									autoComplete="off"
-								/>
+	const isSubmitting = useSelector(form.store, (state) => state.isSubmitting);
 
-								{isInvalid && <FieldError errors={field.state.meta.errors} />}
-							</Field>
-						);
-					}}
-				</form.Field>
-			</FieldGroup>
-			<Button type="submit">Create Room</Button>
-		</form>
+	return (
+		<div className="space-y-6">
+			<div>
+				<h1 className="text-lg font-bold">Creating a room</h1>
+			</div>
+			<form
+				onSubmit={(e) => {
+					e.preventDefault();
+					form.handleSubmit();
+				}}
+				className="space-y-6"
+			>
+				<FieldGroup>
+					<form.Field name="language">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={field.name}>Language *</FieldLabel>
+									<Select
+										disabled={isSubmitting}
+										onValueChange={field.handleChange}
+									>
+										<SelectTrigger>
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												<SelectLabel>Languages</SelectLabel>
+												{languageValues.map((language) => (
+													<SelectItem key={language} value={language}>
+														{language}
+													</SelectItem>
+												))}
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+					<form.Field name="level">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={field.name}>Level *</FieldLabel>
+									<Select
+										disabled={isSubmitting}
+										onValueChange={field.handleChange}
+									>
+										<SelectTrigger>
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												<SelectLabel>Levels</SelectLabel>
+												{levelValues.map((level) => (
+													<SelectItem key={level} value={level}>
+														{level}
+													</SelectItem>
+												))}
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+					<form.Field name="desc">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={field.name}>Description</FieldLabel>
+									<Input
+										disabled={isSubmitting}
+										id={field.name}
+										name={field.name}
+										value={field.state.value}
+										onBlur={field.handleBlur}
+										onChange={(e) => field.handleChange(e.target.value)}
+										aria-invalid={isInvalid}
+										placeholder="random thoughts"
+										autoComplete="off"
+									/>
+
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+				</FieldGroup>
+				<Button type="submit" disabled={isSubmitting}>
+					{isSubmitting && <Spinner />}
+					Create Room
+				</Button>
+			</form>
+		</div>
 	);
 }
 
