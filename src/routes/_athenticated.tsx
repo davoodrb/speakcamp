@@ -18,6 +18,8 @@ export const Route = createFileRoute("/_athenticated")({
 
 		return { ...context, session };
 	},
+
+	ssr: false,
 });
 
 function AuthenticatedLayout() {

@@ -33,41 +33,53 @@ enum Level {
 }
 
 model Room {
-  id        String   @id @default(cuid())
-  desc      String?
-  language  Language
-  level     Level
-  createdBy String
-  createdAt DateTime @default(now())
+  id String @id @default(cuid())
 
-  participants RoomParticipant[]
+  desc     String?
+  language Language
+  level    Level
+  maxUsers Int      @default(6)
+
+  createdBy String?   @unique
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  user User? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  roomSessions RoomSession[]
 
   @@map("rooms")
 }
 
-model RoomParticipant {
+model RoomSession {
+  id     String  @id @default(cuid())
   roomId String
-  userId String
-  room   Room   @relation(fields: [roomId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  userId String?
 
-  @@unique([roomId, userId])
-  @@map("room_participants")
+  joinedAt DateTime  @default(now())
+  leftAt   DateTime?
+
+  room Room  @relation(fields: [roomId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("room_sessions")
 }
 
 model User {
-  id              String            @id
+  id              String    @id
   name            String
   email           String
-  emailVerified   Boolean           @default(false)
+  emailVerified   Boolean   @default(false)
   image           String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   username        String
   displayUsername String?
   sessions        Session[]
   accounts        Account[]
-  rooms           RoomParticipant[]
+
+  roomOwned    Room?
+  roomSessions RoomSession[]
 
   @@unique([email])
   @@unique([username])
