@@ -1,16 +1,22 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
-import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import {
+	createRootRouteWithContext,
+	HeadContent,
+	Scripts,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "#/components/layout/theme-provider";
 import { Toaster } from "#/components/ui/sonner";
 import appCss from "../styles.css?url";
 
-const queryClient = new QueryClient();
+interface RouterContext {
+	queryClient: QueryClient;
+}
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
 	head: () => ({
 		meta: [
 			{
@@ -41,29 +47,27 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<QueryClientProvider client={queryClient}>
-					<ThemeProvider defaultTheme="system" storageKey="theme">
-						{children}
-						<Toaster richColors />
-						<TanStackDevtools
-							config={{
-								position: "bottom-right",
-							}}
-							plugins={[
-								{
-									name: "Tanstack Router",
-									render: <TanStackRouterDevtoolsPanel />,
-								},
-								{
-									name: "Tanstack Query",
-									render: <ReactQueryDevtoolsPanel />,
-								},
-								formDevtoolsPlugin(),
-							]}
-						/>
-					</ThemeProvider>
-					<Scripts />
-				</QueryClientProvider>
+				<ThemeProvider defaultTheme="system" storageKey="theme">
+					{children}
+					<Toaster richColors />
+					<TanStackDevtools
+						config={{
+							position: "bottom-right",
+						}}
+						plugins={[
+							{
+								name: "Tanstack Router",
+								render: <TanStackRouterDevtoolsPanel />,
+							},
+							{
+								name: "Tanstack Query",
+								render: <ReactQueryDevtoolsPanel />,
+							},
+							formDevtoolsPlugin(),
+						]}
+					/>
+				</ThemeProvider>
+				<Scripts />
 			</body>
 		</html>
 	);

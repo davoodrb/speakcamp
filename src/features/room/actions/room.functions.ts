@@ -1,0 +1,94 @@
+import { createServerFn } from "@tanstack/react-start";
+import { prisma } from "#/lib/prisma.server";
+import authMiddleware from "#/middlewares/auth";
+import { createRoomFormSchema } from "../schemas";
+
+export const getRooms = createServerFn({ method: "GET" }).handler(async () => {
+	const rooms = await prisma.room.findMany({
+		where: {
+			deletedAt: null,
+		},
+		orderBy: {
+			createdAt: "desc",
+		},
+	});
+
+	return {
+		success: true,
+		data: rooms,
+		message: "Rooms retrieved successfully",
+	};
+});
+
+export const getRoomById = createServerFn({ method: "GET" })
+	.validator((data: { id: string }) => data)
+	.handler(async ({ data }) => {
+		const room = await prisma.room.findUnique({
+			where: {
+				deletedAt: null,
+				id: data.id,
+			},
+		});
+
+		return {
+			success: true,
+			data: room,
+			message: "Room retrieved successfully",
+		};
+	});
+
+export const createRoom = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.validator(createRoomFormSchema)
+	.handler(async ({ data, context }) => {
+		const { session } = context;
+
+		const activeRoom = await prisma.room.findFirst({
+			where: { createdBy: session.user.id, deletedAt: null },
+		});
+
+		if (activeRoom) {
+			return {
+				success: false,
+				message: "You already have an active room.",
+			};
+		}
+
+		const room = await prisma.room.create({
+			data: {
+				createdBy: session.user.id,
+				level: data.level,
+				language: data.language,
+				desc: data.desc,
+			},
+		});
+
+		return {
+			success: true,
+			data: room,
+			message: "Room created successfully",
+		};
+	});
+
+export const deleteRoom = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.validator((data: { id: string }) => data)
+	.handler(async ({ data, context }) => {
+		const { session } = context;
+
+		await prisma.room.update({
+			where: {
+				id: data.id,
+				createdBy: session.user.id,
+				deletedAt: null,
+			},
+			data: {
+				deletedAt: new Date(),
+			},
+		});
+
+		return {
+			success: true,
+			message: "Room deleted successfully",
+		};
+	});

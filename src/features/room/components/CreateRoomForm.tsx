@@ -20,7 +20,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { createRoomAction } from "../lib/room.functions";
+import { createRoom } from "../actions/room.functions";
 import { createRoomFormSchema } from "../schemas";
 
 const languageValues = Object.values(Language);
@@ -41,13 +41,13 @@ function CreateRoomForm() {
 				const parsed = createRoomFormSchema.safeParse(value);
 
 				if (!parsed.success) {
-					return parsed.error.flatten();
+					return parsed.error;
 				}
 
-				const res = await createRoomAction({ data: parsed.data });
+				const res = await createRoom({ data: parsed.data });
 
-				if (res.error || !res.data?.id) {
-					throw new Error();
+				if (!res.success) {
+					throw new Error(res.message);
 				}
 
 				toast.success(`Room successfully created`);

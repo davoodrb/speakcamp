@@ -117,7 +117,7 @@ function SignInForm() {
 			<div className="text-sm">
 				<span>New to Rootalk?</span>
 				<Button variant="link">
-					<Link to="/auth/sign-up">Create account</Link>
+					<Link to="/auth/sign-up">create account</Link>
 				</Button>
 			</div>
 		</div>

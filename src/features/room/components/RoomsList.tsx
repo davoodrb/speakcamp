@@ -1,48 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "#/components/ui/button";
 
-function RoomsList({
-	data,
-}: {
-	data:
-		| {
-				success: true;
-				data: {
-					id: string;
-					desc: string;
-					level: string;
-					language: string;
-					createdBy: string;
-					createdAt: Date;
-				}[];
-				message: "Rooms retrieved successfully";
-				error?: undefined;
-		  }
-		| {
-				success: false;
-				error: string;
-				data?: undefined;
-				message?: undefined;
-		  };
-}) {
-	if (data.error) {
-		return "Something went wrong!";
-	}
-
-	const { data: rooms } = data;
-
-	if (!rooms) {
-		return "No room";
-	}
+function RoomsList({ data }) {
+	if (!data) return;
 
 	return (
 		<section className="space-y-2">
-			{rooms.map((room) => (
+			{data.map((room) => (
 				<div key={room.id} className="border rounded p-4 space-y-4">
 					<div>
-						<div className="flex gap-2">
+						<div className="flex gap-2 items-center">
 							<div>{room.language}</div>
-							<div>{room.level}</div>
+							<div className="bg-muted text-sm p-2 rounded">{room.level}</div>
 						</div>
 						<div className="text-sm text-muted-foreground">{room.desc}</div>
 					</div>
