@@ -66,109 +66,104 @@ function CreateRoomForm() {
 	const isSubmitting = useSelector(form.store, (state) => state.isSubmitting);
 
 	return (
-		<div className="space-y-6">
-			<div>
-				<h1 className="text-lg font-bold">Creating a room</h1>
-			</div>
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					form.handleSubmit();
-				}}
-				className="space-y-6"
-			>
-				<FieldGroup>
-					<form.Field name="language">
-						{(field) => {
-							const isInvalid =
-								field.state.meta.isTouched && !field.state.meta.isValid;
-							return (
-								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Language *</FieldLabel>
-									<Select
-										disabled={isSubmitting}
-										onValueChange={field.handleChange}
-									>
-										<SelectTrigger>
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												<SelectLabel>Languages</SelectLabel>
-												{languageValues.map((language) => (
-													<SelectItem key={language} value={language}>
-														{language}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
-									{isInvalid && <FieldError errors={field.state.meta.errors} />}
-								</Field>
-							);
-						}}
-					</form.Field>
-					<form.Field name="level">
-						{(field) => {
-							const isInvalid =
-								field.state.meta.isTouched && !field.state.meta.isValid;
-							return (
-								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Level *</FieldLabel>
-									<Select
-										disabled={isSubmitting}
-										onValueChange={field.handleChange}
-									>
-										<SelectTrigger>
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												<SelectLabel>Levels</SelectLabel>
-												{levelValues.map((level) => (
-													<SelectItem key={level} value={level}>
-														{level}
-													</SelectItem>
-												))}
-											</SelectGroup>
-										</SelectContent>
-									</Select>
-									{isInvalid && <FieldError errors={field.state.meta.errors} />}
-								</Field>
-							);
-						}}
-					</form.Field>
-					<form.Field name="desc">
-						{(field) => {
-							const isInvalid =
-								field.state.meta.isTouched && !field.state.meta.isValid;
-							return (
-								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Description</FieldLabel>
-									<Input
-										disabled={isSubmitting}
-										id={field.name}
-										name={field.name}
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.value)}
-										aria-invalid={isInvalid}
-										placeholder="random thoughts"
-										autoComplete="off"
-									/>
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				form.handleSubmit();
+			}}
+			className="space-y-6"
+		>
+			<FieldGroup>
+				<form.Field name="language">
+					{(field) => {
+						const isInvalid =
+							field.state.meta.isTouched && !field.state.meta.isValid;
+						return (
+							<Field data-invalid={isInvalid}>
+								<FieldLabel htmlFor={field.name}>Language *</FieldLabel>
+								<Select
+									disabled={isSubmitting}
+									onValueChange={field.handleChange}
+								>
+									<SelectTrigger>
+										<SelectValue />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectLabel>Languages</SelectLabel>
+											{languageValues.map((language) => (
+												<SelectItem key={language} value={language}>
+													{language}
+												</SelectItem>
+											))}
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+								{isInvalid && <FieldError errors={field.state.meta.errors} />}
+							</Field>
+						);
+					}}
+				</form.Field>
+				<form.Field name="level">
+					{(field) => {
+						const isInvalid =
+							field.state.meta.isTouched && !field.state.meta.isValid;
+						return (
+							<Field data-invalid={isInvalid}>
+								<FieldLabel htmlFor={field.name}>Level *</FieldLabel>
+								<Select
+									disabled={isSubmitting}
+									onValueChange={field.handleChange}
+								>
+									<SelectTrigger>
+										<SelectValue />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectLabel>Levels</SelectLabel>
+											{levelValues.map((level) => (
+												<SelectItem key={level} value={level}>
+													{level}
+												</SelectItem>
+											))}
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+								{isInvalid && <FieldError errors={field.state.meta.errors} />}
+							</Field>
+						);
+					}}
+				</form.Field>
+				<form.Field name="desc">
+					{(field) => {
+						const isInvalid =
+							field.state.meta.isTouched && !field.state.meta.isValid;
+						return (
+							<Field data-invalid={isInvalid}>
+								<FieldLabel htmlFor={field.name}>Description</FieldLabel>
+								<Input
+									disabled={isSubmitting}
+									id={field.name}
+									name={field.name}
+									value={field.state.value}
+									onBlur={field.handleBlur}
+									onChange={(e) => field.handleChange(e.target.value)}
+									aria-invalid={isInvalid}
+									placeholder="random thoughts"
+									autoComplete="off"
+								/>
 
-									{isInvalid && <FieldError errors={field.state.meta.errors} />}
-								</Field>
-							);
-						}}
-					</form.Field>
-				</FieldGroup>
-				<Button type="submit" disabled={isSubmitting}>
-					{isSubmitting && <Spinner />}
-					Create Room
-				</Button>
-			</form>
-		</div>
+								{isInvalid && <FieldError errors={field.state.meta.errors} />}
+							</Field>
+						);
+					}}
+				</form.Field>
+			</FieldGroup>
+			<Button type="submit" disabled={isSubmitting}>
+				{isSubmitting && <Spinner />}
+				Create Room
+			</Button>
+		</form>
 	);
 }
 

@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import Header from "#/components/layout/header";
 import { Spinner } from "#/components/ui/spinner";
 import { authClient } from "#/features/auth/lib/auth-client";
+import CreateRoomDialog from "#/features/room/components/CreateRoomDialog";
 import RoomsList from "#/features/room/components/RoomsList";
 import { roomQueries } from "#/features/room/queries/roomQueries";
 
@@ -14,18 +15,19 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-	const { data: session, isPending } = authClient.useSession();
-	const { data: rooms, isLoading } = useQuery(roomQueries.list());
+	const { data: session, isPending: isSessionLoading } =
+		authClient.useSession();
+	const { data: rooms, isLoading: isRoomsLoading } = useQuery(
+		roomQueries.list(),
+	);
 
 	return (
 		<>
-			<Header user={session?.user} userIsPending={isPending} />
-			<div className="max-w-xl mx-auto p-4">
-				{isLoading ? (
-					<Spinner className="mx-auto" />
-				) : (
-					<RoomsList data={rooms} />
-				)}
+			<Header user={session?.user} userIsLoading={isSessionLoading} />
+			<div className="max-w-xl mx-auto p-4 space-y-4">
+				{!isSessionLoading && session?.user && <CreateRoomDialog />}
+
+				{isRoomsLoading ? <Spinner /> : <RoomsList data={rooms} />}
 			</div>
 		</>
 	);

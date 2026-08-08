@@ -40,7 +40,7 @@ model Room {
   level    Level
   maxUsers Int      @default(6)
 
-  createdBy String?   @unique
+  createdBy String?
   createdAt DateTime  @default(now())
   deletedAt DateTime?
 
@@ -48,6 +48,7 @@ model Room {
 
   roomSessions RoomSession[]
 
+  @@unique([createdBy, deletedAt])
   @@map("rooms")
 }
 
@@ -78,7 +79,7 @@ model User {
   sessions        Session[]
   accounts        Account[]
 
-  roomOwned    Room?
+  rooms        Room[]
   roomSessions RoomSession[]
 
   @@unique([email])

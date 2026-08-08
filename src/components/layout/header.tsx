@@ -6,10 +6,10 @@ import ModeToggle from "./mode-toggle";
 
 function Header({
 	user,
-	userIsPending,
+	userIsLoading,
 }: {
 	user?: object;
-	userIsPending?: boolean;
+	userIsLoading?: boolean;
 }) {
 	return (
 		<header className="flex items-center justify-between p-4">
@@ -23,7 +23,7 @@ function Header({
 			</div>
 			<div className="flex items-center gap-4">
 				<ModeToggle />
-				{userIsPending ? (
+				{userIsLoading ? (
 					<Skeleton className="w-16 self-stretch" />
 				) : user ? (
 					<Link to="/auth" className={buttonVariants()}>

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Button } from "#/components/ui/button";
+import { Badge } from "#/components/ui/badge";
+import { buttonVariants } from "#/components/ui/button";
 
 function RoomsList({ data }) {
 	if (!data) return;
@@ -10,16 +11,20 @@ function RoomsList({ data }) {
 				<div key={room.id} className="border rounded p-4 space-y-4">
 					<div>
 						<div className="flex gap-2 items-center">
-							<div>{room.language}</div>
-							<div className="bg-muted text-sm p-2 rounded">{room.level}</div>
+							<div className="lowercase first-letter:uppercase">
+								{room.language}
+							</div>
+							<Badge variant="secondary">{room.level}</Badge>
 						</div>
 						<div className="text-sm text-muted-foreground">{room.desc}</div>
 					</div>
-					<Button>
-						<Link to="/room/$id" params={{ id: room.id }}>
-							Join
-						</Link>
-					</Button>
+					<Link
+						className={buttonVariants()}
+						to="/room/$id"
+						params={{ id: room.id }}
+					>
+						join
+					</Link>
 				</div>
 			))}
 		</section>

@@ -2,3 +2,5 @@ allowBuilds:
   '@prisma/engines': true
   esbuild: true
   prisma: true
+minimumReleaseAgeExclude:
+  - '@tanstack/router-core@1.171.17'
