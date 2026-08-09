@@ -8,8 +8,8 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { ThemeProvider } from "#/components/layout/theme-provider";
-import { Toaster } from "#/components/ui/sonner";
+import { ThemeProvider } from "#/shared/components/layout/theme-provider";
+import { Toaster } from "#/shared/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 interface RouterContext {

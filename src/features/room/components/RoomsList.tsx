@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Badge } from "#/components/ui/badge";
-import { buttonVariants } from "#/components/ui/button";
+import { Badge } from "#/shared/components/ui/badge";
+import { buttonVariants } from "#/shared/components/ui/button";
 
 function RoomsList({ data }) {
 	if (!data) return;

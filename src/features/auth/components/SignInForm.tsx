@@ -2,14 +2,14 @@ import { useForm } from "@tanstack/react-form-start";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import z from "zod";
-import { Button } from "#/components/ui/button";
+import { Button } from "#/shared/components/ui/button";
 import {
 	Field,
 	FieldError,
 	FieldGroup,
 	FieldLabel,
-} from "#/components/ui/field";
-import { Input } from "#/components/ui/input";
+} from "#/shared/components/ui/field";
+import { Input } from "#/shared/components/ui/input";
 import { useSignIn } from "../hooks/use-auth";
 
 const loginFormSchema = z.object({

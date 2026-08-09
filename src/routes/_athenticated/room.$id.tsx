@@ -5,7 +5,7 @@ import { getRoomToken } from "#/features/room/actions/room.functions";
 import { roomQueries } from "#/features/room/queries/roomQueries";
 import "@livekit/components-styles";
 import RoomContent from "#/features/room/components/RoomContent";
-import { env } from "#/lib/env";
+import { env } from "#/shared/lib/env";
 
 export const Route = createFileRoute("/_athenticated/room/$id")({
 	component: RouteComponent,

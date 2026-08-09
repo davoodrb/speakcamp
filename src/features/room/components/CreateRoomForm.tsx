@@ -1,16 +1,15 @@
 import { useForm, useSelector } from "@tanstack/react-form-start";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Button } from "#/components/ui/button";
+import { Language, Level } from "#/generated/prisma/enums";
+import { Button } from "#/shared/components/ui/button";
 import {
 	Field,
 	FieldError,
 	FieldGroup,
 	FieldLabel,
-} from "#/components/ui/field";
-import { Input } from "#/components/ui/input";
-import { Spinner } from "#/components/ui/spinner";
-import { Language, Level } from "#/generated/prisma/enums";
+} from "#/shared/components/ui/field";
+import { Input } from "#/shared/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -19,7 +18,8 @@ import {
 	SelectLabel,
 	SelectTrigger,
 	SelectValue,
-} from "@/components/ui/select";
+} from "#/shared/components/ui/select";
+import { Spinner } from "#/shared/components/ui/spinner";
 import { createRoom } from "../actions/room.functions";
 import { createRoomFormSchema } from "../schemas";
 

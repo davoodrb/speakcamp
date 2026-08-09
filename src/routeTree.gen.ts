@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AthenticatedRouteImport } from './routes/_athenticated'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AthenticatedAccountRouteImport } from './routes/_athenticated/account'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AthenticatedRoomIdRouteImport } from './routes/_athenticated/room.$id'
@@ -31,6 +32,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AthenticatedAccountRoute = AthenticatedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AthenticatedRoute,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
@@ -61,6 +67,7 @@ const ApiLivekitWebhookRoute = ApiLivekitWebhookRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/account': typeof AthenticatedAccountRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/': typeof AuthIndexRoute
   '/room/$id': typeof AthenticatedRoomIdRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AthenticatedAccountRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth': typeof AuthIndexRoute
   '/room/$id': typeof AthenticatedRoomIdRoute
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_athenticated': typeof AthenticatedRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/_athenticated/account': typeof AthenticatedAccountRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/': typeof AuthIndexRoute
   '/_athenticated/room/$id': typeof AthenticatedRoomIdRoute
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/account'
     | '/auth/sign-up'
     | '/auth/'
     | '/room/$id'
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
     | '/auth/sign-up'
     | '/auth'
     | '/room/$id'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_athenticated'
     | '/auth'
+    | '/_athenticated/account'
     | '/auth/sign-up'
     | '/auth/'
     | '/_athenticated/room/$id'
@@ -146,6 +158,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_athenticated/account': {
+      id: '/_athenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AthenticatedAccountRouteImport
+      parentRoute: typeof AthenticatedRoute
     }
     '/auth/': {
       id: '/auth/'
@@ -186,10 +205,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AthenticatedRouteChildren {
+  AthenticatedAccountRoute: typeof AthenticatedAccountRoute
   AthenticatedRoomIdRoute: typeof AthenticatedRoomIdRoute
 }
 
 const AthenticatedRouteChildren: AthenticatedRouteChildren = {
+  AthenticatedAccountRoute: AthenticatedAccountRoute,
   AthenticatedRoomIdRoute: AthenticatedRoomIdRoute,
 }
 

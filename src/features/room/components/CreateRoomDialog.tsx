@@ -1,11 +1,11 @@
-import { Button } from "#/components/ui/button";
+import { Button } from "#/shared/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "#/components/ui/dialog";
+} from "#/shared/components/ui/dialog";
 import CreateRoomForm from "./CreateRoomForm";
 
 function CreateRoomDialog() {

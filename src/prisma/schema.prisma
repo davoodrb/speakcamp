@@ -75,7 +75,7 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   username        String
-  displayUsername String?
+  displayUsername String
   sessions        Session[]
   accounts        Account[]
 

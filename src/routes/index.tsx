@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import Header from "#/components/layout/header";
-import { Spinner } from "#/components/ui/spinner";
 import { authClient } from "#/features/auth/lib/auth-client";
 import CreateRoomDialog from "#/features/room/components/CreateRoomDialog";
 import RoomsList from "#/features/room/components/RoomsList";
 import { roomQueries } from "#/features/room/queries/roomQueries";
+import Header from "#/shared/components/layout/header";
+import { Spinner } from "#/shared/components/ui/spinner";
 
 export const Route = createFileRoute("/")({
 	loader: ({ context }) => {

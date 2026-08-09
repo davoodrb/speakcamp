@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { AccessToken } from "livekit-server-sdk";
-import { env } from "#/lib/env";
-import { liveKitAPI } from "#/lib/livekit";
-import { prisma } from "#/lib/prisma.server";
 import authMiddleware from "#/middlewares/auth";
+import { env } from "#/shared/lib/env";
+import { liveKitAPI } from "#/shared/lib/livekit";
+import { prisma } from "#/shared/lib/prisma.server";
 import { createRoomFormSchema } from "../schemas";
 
 export const getRooms = createServerFn({ method: "GET" }).handler(async () => {

@@ -26,7 +26,7 @@
 		"enabled": true,
 		"rules": {
 			"correctness": {
-				"noChildrenProp": "warn"
+				"noChildrenProp": "off"
 			},
 			"a11y": {
 				"useSemanticElements": "warn",

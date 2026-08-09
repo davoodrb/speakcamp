@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { WebhookReceiver } from "livekit-server-sdk";
-import { env } from "#/lib/env";
-import { prisma } from "#/lib/prisma.server";
+import { env } from "#/shared/lib/env";
+import { prisma } from "#/shared/lib/prisma.server";
 
 const receiver = new WebhookReceiver(
 	env.LIVEKIT_API_KEY,
