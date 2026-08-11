@@ -21,7 +21,7 @@ function Header({
 					Speak. Connect. Improve.
 				</p>
 			</div>
-			<div className="flex items-center gap-4">
+			<div className="flex items-center gap-2">
 				<ModeToggle />
 				{userIsLoading ? (
 					<Skeleton className="w-16 self-stretch" />
@@ -34,7 +34,7 @@ function Header({
 						Sign in
 					</Link>
 				)}
-				<MenuSheet />
+				{/* <MenuSheet /> */}
 			</div>
 		</header>
 	);
