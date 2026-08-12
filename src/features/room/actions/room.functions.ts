@@ -123,3 +123,19 @@ export const getRoomToken = createServerFn({ method: "POST" })
 
 		return token;
 	});
+
+export const getRoomParticipantsLivekit = createServerFn({ method: "GET" })
+	.validator((data: { roomId: string }) => data)
+	.handler(async ({ data }) => {
+		const participants = await liveKitAPI.room.listParticipants(data.roomId);
+
+		const participantNames = participants.map(
+			(participant) => participant.name,
+		);
+
+		return {
+			success: true,
+			data: participantNames,
+			message: "Participants retrieved successfully",
+		};
+	});
