@@ -33,7 +33,7 @@ function EditAccountForm({ user }: { user: User }) {
 							field.state.meta.isTouched && !field.state.meta.isValid;
 						return (
 							<Field data-invalid={isInvalid}>
-								<FieldLabel htmlFor={field.name}>username</FieldLabel>
+								<FieldLabel htmlFor={field.name}>Username</FieldLabel>
 								<Input
 									id={field.name}
 									name={field.name}
@@ -58,7 +58,7 @@ function EditAccountForm({ user }: { user: User }) {
 							field.state.meta.isTouched && !field.state.meta.isValid;
 						return (
 							<Field data-invalid={isInvalid}>
-								<FieldLabel htmlFor={field.name}>username</FieldLabel>
+								<FieldLabel htmlFor={field.name}>Email</FieldLabel>
 								<Input
 									id={field.name}
 									name={field.name}
@@ -68,7 +68,6 @@ function EditAccountForm({ user }: { user: User }) {
 									aria-invalid={isInvalid}
 									placeholder="Login button not working on mobile"
 									autoComplete="off"
-									// TODO: remove later
 									disabled={true}
 								/>
 								{isInvalid && <FieldError errors={field.state.meta.errors} />}

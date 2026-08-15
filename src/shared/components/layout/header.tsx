@@ -1,14 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "#/shared/components/ui/button";
 import { Skeleton } from "#/shared/components/ui/skeleton";
-import MenuSheet from "./menu-sheet";
 import ModeToggle from "./mode-toggle";
 
 function Header({
 	user,
 	userIsLoading,
 }: {
-	user?: object;
+	user?: { displayUsername: string };
 	userIsLoading?: boolean;
 }) {
 	return (
@@ -27,14 +26,13 @@ function Header({
 					<Skeleton className="w-16 self-stretch" />
 				) : user ? (
 					<Link to="/account" className={buttonVariants()}>
-						Profile
+						{user.displayUsername.slice(0, 12)}
 					</Link>
 				) : (
 					<Link to="/auth" className={buttonVariants()}>
 						Sign in
 					</Link>
 				)}
-				{/* <MenuSheet /> */}
 			</div>
 		</header>
 	);

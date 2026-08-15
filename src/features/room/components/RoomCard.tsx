@@ -8,6 +8,7 @@ import {
 import { Badge } from "#/shared/components/ui/badge";
 import { buttonVariants } from "#/shared/components/ui/button";
 import { Skeleton } from "#/shared/components/ui/skeleton";
+import { cn } from "#/shared/lib/utils";
 import { roomQueries } from "../queries/roomQueries";
 
 function RoomCard({ room }) {
@@ -44,7 +45,7 @@ function RoomCard({ room }) {
 			)}
 
 			<Link
-				className={buttonVariants()}
+				className={cn(buttonVariants({ variant: "outline" }), "w-full")}
 				to="/room/$id"
 				params={{ id: room.id }}
 			>

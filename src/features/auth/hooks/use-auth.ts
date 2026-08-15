@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { authClient } from "../lib/auth-client";
 
 export const useSignUp = () => {
@@ -27,6 +28,7 @@ export const useSignUp = () => {
 			const result = await authClient.signUp.email({
 				email,
 				password,
+				displayUsername: username,
 				username,
 				name: "",
 			});
@@ -98,7 +100,8 @@ export const useLogout = () => {
 			await authClient.signOut();
 		},
 		onSuccess: () => {
-			router.navigate({ to: "/auth" });
+			router.navigate({ to: "/" });
+			toast.success("Logged out successfully");
 		},
 	});
 };
