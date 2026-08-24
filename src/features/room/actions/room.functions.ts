@@ -55,7 +55,7 @@ export const createRoom = createServerFn({ method: "POST" })
 		if (activeRoom) {
 			return {
 				success: false,
-				message: `You already have an active room. Your room must be empty for ${EMPTY_TIME_OUT} to get deleted automatically`,
+				message: `You already have an active room. Your room must be empty for ${EMPTY_TIME_OUT} seconds to get deleted automatically`,
 			};
 		}
 

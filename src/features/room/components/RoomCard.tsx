@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import { ArrowRightIcon } from "lucide-react";
 import {
 	Avatar,
 	AvatarFallback,
@@ -45,11 +46,15 @@ function RoomCard({ room }) {
 			)}
 
 			<Link
-				className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+				className={cn(
+					buttonVariants({ variant: "outline" }),
+					"group w-full justify-center gap-1 transition hover:gap-2 hover:border-primary hover:bg-primary/5",
+				)}
 				to="/room/$id"
 				params={{ id: room.id }}
 			>
-				join
+				<span>Join Room</span>
+				<ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
 			</Link>
 		</div>
 	);

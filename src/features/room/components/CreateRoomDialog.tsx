@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { PlusIcon } from "lucide-react";
 import {
 	Dialog,
 	DialogContent,
@@ -35,8 +36,11 @@ function CreateRoomDialog({
 
 	return (
 		<Dialog>
-			<DialogTrigger className="w-full rounded border border-dashed py-8">
-				Create new room
+			<DialogTrigger className="w-full rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 px-4 py-8 text-center text-sm font-medium text-muted-foreground hover:bg-muted transition">
+				<div className="flex flex-col items-center gap-2">
+					<PlusIcon />
+					<span>Create new room</span>
+				</div>
 			</DialogTrigger>
 
 			<DialogContent>
