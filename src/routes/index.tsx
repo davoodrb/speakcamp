@@ -30,7 +30,7 @@ function Home() {
 					isLoading={isSessionLoading}
 				/>
 
-				{isRoomsLoading ? <Spinner /> : <RoomsList data={rooms} />}
+				{isRoomsLoading ? <Spinner /> : <RoomsList rooms={rooms} />}
 			</div>
 		</>
 	);
