@@ -20,7 +20,7 @@ function CreateRoomDialog({
 	isLoading,
 }: CreateRoomDialogProps) {
 	if (isLoading) {
-		return <Skeleton className="h-16" />;
+		return <Skeleton className="h-32" />;
 	}
 
 	if (!isUserLoggedIn) {

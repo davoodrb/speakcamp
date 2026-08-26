@@ -44,21 +44,16 @@ function CreateRoomForm() {
 					return parsed.error;
 				}
 
-				const res = await createRoom({ data: parsed.data });
-
-				if (!res.success) {
-					throw new Error(res.message);
-				}
+				const room = await createRoom({ data: parsed.data });
 
 				toast.success(`Room successfully created`);
-				router.navigate({ to: "/room/$id", params: { id: res.data.id } });
+				router.navigate({ to: "/room/$id", params: { id: room.id } });
 			} catch (error) {
 				if (error instanceof Error) {
 					toast.error(error.message);
 				} else {
 					toast.error("Something went wrong!");
 				}
-				return 0;
 			}
 		},
 	});

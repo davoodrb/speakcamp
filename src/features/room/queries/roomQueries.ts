@@ -11,11 +11,7 @@ export const roomQueries = {
 		queryOptions({
 			queryKey: roomKeys.list(),
 			queryFn: async () => {
-				const response = await getRooms();
-				if (!response.success) {
-					throw new Error(response.message);
-				}
-				return response.data;
+				return await getRooms();
 			},
 		}),
 
@@ -23,11 +19,7 @@ export const roomQueries = {
 		queryOptions({
 			queryKey: roomKeys.detail(roomId),
 			queryFn: async () => {
-				const response = await getRoomById({ data: { id: roomId } });
-				if (!response.success) {
-					throw new Error(response.message);
-				}
-				return response.data;
+				return await getRoomById({ data: { id: roomId } });
 			},
 		}),
 
@@ -35,13 +27,9 @@ export const roomQueries = {
 		queryOptions({
 			queryKey: roomKeys.participantsList(roomId),
 			queryFn: async () => {
-				const response = await getRoomParticipantsLivekit({
+				return await getRoomParticipantsLivekit({
 					data: { roomId: roomId },
 				});
-				if (!response.success) {
-					throw new Error(response.message);
-				}
-				return response.data;
 			},
 		}),
 };

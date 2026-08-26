@@ -1,3 +1,4 @@
+import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { AccessToken } from "livekit-server-sdk";
 import authMiddleware from "#/middlewares/auth";
@@ -16,11 +17,7 @@ export const getRooms = createServerFn({ method: "GET" }).handler(async () => {
 		},
 	});
 
-	return {
-		success: true,
-		data: rooms,
-		message: "Rooms retrieved successfully",
-	};
+	return rooms;
 });
 
 export const getRoomById = createServerFn({ method: "GET" })
@@ -33,11 +30,7 @@ export const getRoomById = createServerFn({ method: "GET" })
 			},
 		});
 
-		return {
-			success: true,
-			data: room,
-			message: "Room retrieved successfully",
-		};
+		return room;
 	});
 
 export const createRoom = createServerFn({ method: "POST" })
@@ -51,12 +44,10 @@ export const createRoom = createServerFn({ method: "POST" })
 		const activeRoom = await prisma.room.findFirst({
 			where: { createdBy: session.user.id, deletedAt: null },
 		});
-
 		if (activeRoom) {
-			return {
-				success: false,
-				message: `You already have an active room. Your room must be empty for ${EMPTY_TIME_OUT} seconds to get deleted automatically`,
-			};
+			throw new Error(
+				`You already have an active room. Your room must be empty for ${EMPTY_TIME_OUT} seconds to get deleted automatically`,
+			);
 		}
 
 		const room = await prisma.room.create({
@@ -67,18 +58,12 @@ export const createRoom = createServerFn({ method: "POST" })
 				desc: data.desc,
 			},
 		});
-
 		await liveKitAPI.room.createRoom({
 			name: room.id,
 			emptyTimeout: EMPTY_TIME_OUT,
-			// maxParticipants: 6,
 		});
 
-		return {
-			success: true,
-			data: room,
-			message: "Room created successfully",
-		};
+		return room;
 	});
 
 export const deleteRoom = createServerFn({ method: "POST" })
@@ -87,7 +72,7 @@ export const deleteRoom = createServerFn({ method: "POST" })
 	.handler(async ({ data, context }) => {
 		const { session } = context;
 
-		await prisma.room.update({
+		const room = await prisma.room.update({
 			where: {
 				id: data.id,
 				createdBy: session.user.id,
@@ -98,10 +83,7 @@ export const deleteRoom = createServerFn({ method: "POST" })
 			},
 		});
 
-		return {
-			success: true,
-			message: "Room deleted successfully",
-		};
+		return room.id;
 	});
 
 export const getRoomToken = createServerFn({ method: "POST" })
@@ -112,6 +94,11 @@ export const getRoomToken = createServerFn({ method: "POST" })
 			session: { user },
 		} = context;
 		const { roomId } = data;
+
+		const room = await prisma.room.findFirst({ where: { id: roomId } });
+		if (!room) {
+			throw notFound();
+		}
 
 		const at = new AccessToken(env.LIVEKIT_API_KEY, env.LIVEKIT_API_SECRET, {
 			identity: user.id,
@@ -133,9 +120,5 @@ export const getRoomParticipantsLivekit = createServerFn({ method: "GET" })
 			(participant) => participant.name,
 		);
 
-		return {
-			success: true,
-			data: participantNames,
-			message: "Participants retrieved successfully",
-		};
+		return participantNames;
 	});
