@@ -3,9 +3,9 @@ import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import {
-	createRootRouteWithContext,
-	HeadContent,
-	Scripts,
+  createRootRouteWithContext,
+  HeadContent,
+  Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "#/shared/components/layout/theme-provider";
@@ -13,62 +13,62 @@ import { Toaster } from "#/shared/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 interface RouterContext {
-	queryClient: QueryClient;
+  queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-	head: () => ({
-		meta: [
-			{
-				charSet: "utf-8",
-			},
-			{
-				name: "viewport",
-				content: "width=device-width, initial-scale=1",
-			},
-			{
-				title: "Rootalk",
-			},
-		],
-		links: [
-			{
-				rel: "stylesheet",
-				href: appCss,
-			},
-		],
-	}),
-	shellComponent: RootDocument,
+  head: () => ({
+    meta: [
+      {
+        charSet: "utf-8",
+      },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
+      {
+        title: "Rootalk",
+      },
+    ],
+    links: [
+      {
+        rel: "stylesheet",
+        href: appCss,
+      },
+    ],
+  }),
+  shellComponent: RootDocument,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	return (
-		<html lang="en" suppressHydrationWarning>
-			<head>
-				<HeadContent />
-			</head>
-			<body>
-				<ThemeProvider defaultTheme="system" storageKey="theme">
-					{children}
-					<Toaster richColors />
-					<TanStackDevtools
-						config={{
-							position: "bottom-right",
-						}}
-						plugins={[
-							{
-								name: "Tanstack Router",
-								render: <TanStackRouterDevtoolsPanel />,
-							},
-							{
-								name: "Tanstack Query",
-								render: <ReactQueryDevtoolsPanel />,
-							},
-							formDevtoolsPlugin(),
-						]}
-					/>
-				</ThemeProvider>
-				<Scripts />
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <ThemeProvider defaultTheme="system" storageKey="theme">
+          {children}
+          <Toaster richColors />
+          <TanStackDevtools
+            config={{
+              position: "bottom-right",
+            }}
+            plugins={[
+              {
+                name: "Tanstack Router",
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+              {
+                name: "Tanstack Query",
+                render: <ReactQueryDevtoolsPanel />,
+              },
+              formDevtoolsPlugin(),
+            ]}
+          />
+        </ThemeProvider>
+        <Scripts />
+      </body>
+    </html>
+  );
 }

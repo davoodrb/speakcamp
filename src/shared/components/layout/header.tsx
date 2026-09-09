@@ -4,38 +4,38 @@ import { Skeleton } from "#/shared/components/ui/skeleton";
 import ModeToggle from "./mode-toggle";
 
 function Header({
-	user,
-	userIsLoading,
+  user,
+  userIsLoading,
 }: {
-	user?: { displayUsername: string };
-	userIsLoading?: boolean;
+  user?: { displayUsername: string };
+  userIsLoading?: boolean;
 }) {
-	return (
-		<header className="flex items-center justify-between p-4">
-			<div>
-				<Link to="/">
-					<h1 className="text-bold text-2xl">Rootalk 🗣️</h1>
-				</Link>
-				<p className="text-xs text-muted-foreground">
-					Speak. Connect. Improve.
-				</p>
-			</div>
-			<div className="flex items-center gap-2">
-				<ModeToggle />
-				{userIsLoading ? (
-					<Skeleton className="w-16 self-stretch" />
-				) : user ? (
-					<Link to="/account" className={buttonVariants()}>
-						{user.displayUsername.slice(0, 12)}
-					</Link>
-				) : (
-					<Link to="/auth" className={buttonVariants()}>
-						Sign in
-					</Link>
-				)}
-			</div>
-		</header>
-	);
+  return (
+    <header className="flex items-center justify-between p-4">
+      <div>
+        <Link to="/">
+          <h1 className="text-bold text-2xl">Rootalk 🗣️</h1>
+        </Link>
+        <p className="text-xs text-muted-foreground">
+          Speak. Connect. Improve.
+        </p>
+      </div>
+      <div className="flex items-center gap-2">
+        <ModeToggle />
+        {userIsLoading ? (
+          <Skeleton className="w-16 self-stretch" />
+        ) : user ? (
+          <Link to="/account" className={buttonVariants()}>
+            {user.displayUsername.slice(0, 12)}
+          </Link>
+        ) : (
+          <Link to="/auth" className={buttonVariants()}>
+            Sign in
+          </Link>
+        )}
+      </div>
+    </header>
+  );
 }
 
 export default Header;

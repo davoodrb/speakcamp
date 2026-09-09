@@ -8,17 +8,17 @@ import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
 const config = defineConfig({
-	resolve: { tsconfigPaths: true },
-	plugins: [
-		devtools(),
-		nitro({ rollupConfig: { external: [/^@sentry\//] } }),
-		tailwindcss(),
-		tanstackStart(),
-		viteReact(),
-	],
-	optimizeDeps: {
-		include: ["@tanstack/react-form-start"],
-	},
+  resolve: { tsconfigPaths: true },
+  plugins: [
+    devtools(),
+    nitro({ rollupConfig: { external: [/^@sentry\//] } }),
+    tailwindcss(),
+    tanstackStart(),
+    viteReact(),
+  ],
+  optimizeDeps: {
+    include: ["@tanstack/react-form-start"],
+  },
 });
 
 export default config;

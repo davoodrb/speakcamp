@@ -8,30 +8,30 @@ import Header from "#/shared/components/layout/header";
 import { Spinner } from "#/shared/components/ui/spinner";
 
 export const Route = createFileRoute("/")({
-	loader: ({ context }) => {
-		context.queryClient.fetchQuery(roomQueries.list());
-	},
-	component: Home,
+  loader: ({ context }) => {
+    context.queryClient.fetchQuery(roomQueries.list());
+  },
+  component: Home,
 });
 
 function Home() {
-	const { data: session, isPending: isSessionLoading } =
-		authClient.useSession();
-	const { data: rooms, isLoading: isRoomsLoading } = useQuery(
-		roomQueries.list(),
-	);
+  const { data: session, isPending: isSessionLoading } =
+    authClient.useSession();
+  const { data: rooms, isLoading: isRoomsLoading } = useQuery(
+    roomQueries.list(),
+  );
 
-	return (
-		<>
-			<Header user={session?.user} userIsLoading={isSessionLoading} />
-			<div className="max-w-xl mx-auto p-4 space-y-4">
-				<CreateRoomDialog
-					isUserLoggedIn={!!session?.user}
-					isLoading={isSessionLoading}
-				/>
+  return (
+    <>
+      <Header user={session?.user} userIsLoading={isSessionLoading} />
+      <div className="max-w-xl mx-auto p-4 space-y-4">
+        <CreateRoomDialog
+          isUserLoggedIn={!!session?.user}
+          isLoading={isSessionLoading}
+        />
 
-				{isRoomsLoading ? <Spinner /> : <RoomsList rooms={rooms} />}
-			</div>
-		</>
-	);
+        {isRoomsLoading ? <Spinner /> : <RoomsList rooms={rooms} />}
+      </div>
+    </>
+  );
 }
