@@ -1,8 +1,6 @@
 import {
 	BarVisualizer,
-	TrackMutedIndicator,
 	TrackRefContext,
-	useEnsureTrackRef,
 	useMaybeTrackRefContext,
 	useParticipantContext,
 	useTracks,

@@ -8,4 +8,5 @@ export interface User {
 	image?: string | null;
 	username: string;
 	displayUsername: string;
+	bio?: string | null;
 }

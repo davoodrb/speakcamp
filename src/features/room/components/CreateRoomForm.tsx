@@ -20,6 +20,7 @@ import {
 	SelectValue,
 } from "#/shared/components/ui/select";
 import { Spinner } from "#/shared/components/ui/spinner";
+import { formatEnumLabel } from "#/shared/lib/utils";
 import { createRoom } from "../actions/room.functions";
 import { createRoomFormSchema } from "../schemas";
 
@@ -88,7 +89,7 @@ function CreateRoomForm() {
 											<SelectLabel>Languages</SelectLabel>
 											{languageValues.map((language) => (
 												<SelectItem key={language} value={language}>
-													{language}
+													{formatEnumLabel(language)}
 												</SelectItem>
 											))}
 										</SelectGroup>
@@ -118,7 +119,7 @@ function CreateRoomForm() {
 											<SelectLabel>Levels</SelectLabel>
 											{levelValues.map((level) => (
 												<SelectItem key={level} value={level}>
-													{level}
+													{formatEnumLabel(level)}
 												</SelectItem>
 											))}
 										</SelectGroup>
@@ -146,6 +147,7 @@ function CreateRoomForm() {
 									aria-invalid={isInvalid}
 									placeholder="random thoughts"
 									autoComplete="off"
+									maxLength={100}
 								/>
 
 								{isInvalid && <FieldError errors={field.state.meta.errors} />}

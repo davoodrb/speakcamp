@@ -9,7 +9,7 @@ import {
 import { Badge } from "#/shared/components/ui/badge";
 import { buttonVariants } from "#/shared/components/ui/button";
 import { Skeleton } from "#/shared/components/ui/skeleton";
-import { cn } from "#/shared/lib/utils";
+import { cn, formatEnumLabel } from "#/shared/lib/utils";
 import { roomQueries } from "../queries/roomQueries";
 
 function RoomCard({ room }) {
@@ -21,10 +21,12 @@ function RoomCard({ room }) {
 		<div className="border rounded p-4 space-y-4">
 			<div>
 				<div className="flex gap-2 items-center">
-					<div>{room.language}</div>
-					<Badge variant="secondary">{room.level}</Badge>
+					<div>{formatEnumLabel(room.language)}</div>
+					<Badge variant="secondary">{formatEnumLabel(room.level)}</Badge>
 				</div>
-				<div className="text-sm text-muted-foreground">{room.desc}</div>
+				<div className="text-sm text-muted-foreground text-ellipsis overflow-hidden line-clamp-2">
+					{room.desc}
+				</div>
 			</div>
 
 			{isPending && (

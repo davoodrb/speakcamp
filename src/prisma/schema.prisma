@@ -76,6 +76,7 @@ model User {
   updatedAt       DateTime  @updatedAt
   username        String
   displayUsername String
+  bio             String?
   sessions        Session[]
   accounts        Account[]
 

@@ -1,218 +1,240 @@
-Welcome to your new TanStack Start app! 
+# Rootalk
 
-# Getting Started
+Real-time language practice rooms powered by LiveKit. Users create or join audio rooms to practice speaking in their target language with others at similar proficiency levels.
 
-To run this application:
+## Architecture
+
+**Stack**: TanStack React Start + TypeScript + PostgreSQL (Prisma) + LiveKit
+
+| Layer | Technology |
+|-------|------------|
+| Framework | TanStack Start (file-based routing, SSR) |
+| Routing | TanStack Router (type-safe, file-based) |
+| State/Data | TanStack Query (server state, caching) |
+| Auth | Better Auth (email/password + username) |
+| Real-time | LiveKit (WebRTC audio rooms) |
+| Database | PostgreSQL + Prisma ORM |
+| Styling | TailwindCSS v4 + shadcn-style components |
+| Dev Tools | Biome (lint/format), Vitest, Husky |
+
+### Route Structure
+
+```
+src/routes/
+├── __root.tsx                 # Root layout (Theme, Toaster, DevTools)
+├── index.tsx                  # Public landing: room list + create dialog
+├── auth.tsx                   # Auth layout (sign in/up pages)
+│   ├── index.tsx              # Sign in form
+│   └── sign-up.tsx            # Sign up form
+├── _authenticated.tsx         # Protected layout + session validation
+│   ├── room.$id.tsx           # LiveKit room (audio + participant list)
+│   └── account.tsx            # Account settings + logout
+├── api/
+│   ├── auth.$.ts              # Better Auth handler (all auth endpoints)
+│   └── livekit.webhook.ts     # LiveKit webhook → auto-delete empty rooms
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- pnpm 11+
+- PostgreSQL 16+
+- LiveKit Server (local or cloud)
+
+### Installation
 
 ```bash
+# Install dependencies
 pnpm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your values
+
+# Set up database
+pnpm db:push        # or pnpm db:migrate
+
+# Start development server
 pnpm dev
 ```
 
-# Building For Production
+### Environment Variables
 
-To build this application for production:
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `DATABASE_URL` | PostgreSQL connection string | Yes |
+| `BETTER_AUTH_URL` | App URL (e.g., `http://localhost:3000`) | Yes |
+| `BETTER_AUTH_SECRET` | 32+ char secret for session signing | Yes |
+| `LIVEKIT_API_KEY` | LiveKit API key | Yes |
+| `LIVEKIT_API_SECRET` | LiveKit API secret | Yes |
+| `VITE_LIVEKIT_URL` | LiveKit WebSocket URL (client) | Yes |
+
+## Authentication
+
+**Better Auth** with TanStack Start cookie integration.
+
+### Flow
+
+1. **API Routes**: `/api/auth/$` handles all auth (sign in, sign up, session, logout, etc.)
+2. **Server Middleware**: `src/middlewares/auth.ts` validates session on protected server functions
+3. **Route Guard**: `_authenticated.tsx` uses `beforeLoad` to redirect unauthenticated users to `/auth`
+4. **Client Hooks**: `authClient.useSession()`, `useSignIn()`, `useSignUp()`, `useLogout()`
+
+### User Model
+
+- `id`, `email`, `username` (unique), `displayUsername` (required)
+- `emailVerified`, `image`, `createdAt`, `updatedAt`
+- Relations: `rooms` (created), `roomSessions` (joined)
+
+## Data Flow
+
+```
+User Action (UI)
+       ↓
+Server Function (createServerFn + Zod validation)
+       ↓
+Middleware (authMiddleware → validates session)
+       ↓
+Prisma → PostgreSQL
+       ↓
+LiveKit API (room create/delete, token generation)
+       ↓
+TanStack Query (client cache, invalidation)
+       ↓
+React Components → LiveKitRoom (WebRTC connection)
+```
+
+### Key Patterns
+
+- **Server Functions**: Type-safe RPC endpoints (`src/features/room/actions/room.functions.ts`)
+- **Query Options**: Centralized in `src/features/room/queries/roomQueries.ts`
+- **Loaders**: Pre-fetch data during route transitions (`loader` in route files)
+- **Middleware**: Protects mutating operations (create/delete room, get token)
+
+## Development
+
+### Commands
+
+```bash
+# Development
+pnpm dev              # Start dev server (port 3000)
+pnpm generate-routes  # Regenerate route tree (after adding routes)
+
+# Database
+pnpm db:push          # Push schema changes (dev)
+pnpm db:migrate       # Create/apply migrations
+pnpm db:studio        # Open Prisma Studio
+
+# Code Quality
+pnpm lint             # Biome lint
+pnpm format           # Biome format
+pnpm check            # Lint + format
+
+# Testing
+pnpm test             # Vitest run (no tests yet)
+
+# Build
+pnpm build            # Production build
+pnpm preview          # Preview production build
+```
+
+### Project Structure
+
+```
+src/
+├── features/
+│   ├── auth/
+│   │   ├── lib/           # Better Auth config, client, server functions
+│   │   ├── hooks/         # useSession, useSignIn, useSignUp, useLogout
+│   │   └── components/    # SignInForm, SignUpForm
+│   ├── room/
+│   │   ├── actions/       # Server functions (CRUD + LiveKit tokens)
+│   │   ├── queries/       # TanStack Query options
+│   │   ├── components/    # RoomCard, CreateRoomDialog, RoomContent, etc.
+│   │   └── schemas.ts     # Zod schemas
+│   └── account/
+│       └── components/    # EditAccountForm
+├── routes/                # File-based routes (see Route Structure)
+├── middlewares/
+│   └── auth.ts            # Session validation middleware
+├── shared/
+│   ├── components/
+│   │   ├── ui/            # shadcn-style primitives (Button, Input, etc.)
+│   │   └── layout/        # Header, ThemeProvider, MenuSheet
+│   ├── lib/
+│   │   ├── prisma.server.ts  # Prisma client (singleton)
+│   │   ├── livekit.ts        # LiveKit server SDK client
+│   │   └── env.ts            # Validated env (t3-env)
+│   └── types/             # Shared TypeScript types
+└── start.ts               # TanStack Start instance + CSRF middleware
+```
+
+## Deployment
+
+### Build
 
 ```bash
 pnpm build
+# Output: dist/ (self-contained Node server via Nitro)
 ```
 
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+### Run Production
 
 ```bash
-pnpm test
-```
-
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `pnpm add @tailwindcss/vite tailwindcss --dev`
-
-## Linting & Formatting
-
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
-
-
-```bash
-pnpm lint
-pnpm format
-pnpm check
-```
-
-
-## Deploy with Nitro
-
-This project uses Nitro as a generic server adapter, so it can run on any Node-compatible host.
-
-```bash
-npm run build
 node dist/server/index.mjs
 ```
 
-The build output is a self-contained Node server. To deploy, push the `dist/` directory to your host (Render, Fly.io, your own VPS, etc.) and run the server command above.
+### Required Services
 
-For host-specific presets (Vercel, Netlify, Cloudflare, AWS Lambda, etc.) and tuning, see https://v3.nitro.build/deploy.
+1. **PostgreSQL** - Database
+2. **LiveKit Server** - WebRTC infrastructure
+   - Configure webhook: `POST /api/livekit/webhook` → handles `room_finished` to auto-delete empty rooms
+3. **Node.js Host** - Render, Fly.io, VPS, etc. (any Node-compatible)
 
+### Nitro Presets
 
+For platform-specific deployment, see [Nitro Deploy](https://v3.nitro.build/deploy).
 
-## Routing
+## Testing
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+Currently **no tests implemented**. Test infrastructure is configured:
 
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```bash
+pnpm test  # Runs vitest
 ```
 
-Then anywhere in your JSX you can use it like so:
+**Dependencies installed**: Vitest, Testing Library (React + DOM), jsdom
 
-```tsx
-<Link to="/about">About</Link>
+**Suggested structure** when adding tests:
+
+```
+src/
+  features/
+    auth/__tests__/
+    room/__tests__/
+    account/__tests__/
+  shared/lib/__tests__/
+  routes/__tests__/
 ```
 
-This will create a link that will navigate to the `/about` route.
+## Database Schema
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
+Key models in `prisma/schema.prisma`:
 
-### Using A Layout
+- **User** - Auth + profile (username, displayUsername)
+- **Room** - Language practice room (language, level, maxUsers, creator)
+- **RoomSession** - User join/leave tracking
+- **Session/Account/Verification** - Better Auth tables
 
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
+## LiveKit Integration
 
-Here is an example layout that includes a header:
+- **Room Creation**: Server function creates LiveKit room with `emptyTimeout: 30s`
+- **Token Generation**: `getRoomToken` server function mints access tokens with `roomJoin` grant
+- **Webhook**: `/api/livekit/webhook` receives `room_finished` → marks room `deletedAt`
+- **Client**: `@livekit/components-react` `LiveKitRoom` component handles connection
 
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+## License
 
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+MIT
