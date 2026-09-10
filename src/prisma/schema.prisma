@@ -47,6 +47,7 @@ model Room {
   user User? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
 
   roomSessions RoomSession[]
+  bannedRooms  BannedRoom[]
 
   @@unique([createdBy, deletedAt])
   @@map("rooms")
@@ -66,6 +67,20 @@ model RoomSession {
   @@map("room_sessions")
 }
 
+model BannedRoom {
+  id     String @id @default(cuid())
+  userId String
+  roomId String
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roomId])
+  @@map("banned_rooms")
+}
+
 model User {
   id              String    @id
   name            String
@@ -82,6 +97,7 @@ model User {
 
   rooms        Room[]
   roomSessions RoomSession[]
+  bannedRooms  BannedRoom[]
 
   @@unique([email])
   @@unique([username])

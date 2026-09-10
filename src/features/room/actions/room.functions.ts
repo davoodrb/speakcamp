@@ -100,9 +100,27 @@ export const getRoomToken = createServerFn({ method: "POST" })
       throw notFound();
     }
 
+    const isBanned = await prisma.bannedRoom.findUnique({
+      where: {
+        userId_roomId: {
+          userId: user.id,
+          roomId,
+        },
+      },
+    });
+
+    if (isBanned) {
+      throw new Error("You are banned from this room");
+    }
+
+    const isOwner = room.createdBy === user.id;
+
     const at = new AccessToken(env.LIVEKIT_API_KEY, env.LIVEKIT_API_SECRET, {
       identity: user.id,
-      name: user.displayUsername ?? user.email,
+      name: user.displayUsername,
+      attributes: {
+        role: isOwner ? "owner" : "member",
+      },
     });
     at.addGrant({ roomJoin: true, room: roomId });
 
@@ -121,4 +139,45 @@ export const getRoomParticipantsLivekit = createServerFn({ method: "GET" })
     );
 
     return participantNames;
+  });
+
+export const removeParticipant = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((data: { roomId: string; identity: string }) => data)
+  .handler(async ({ data, context }) => {
+    const {
+      session: { user },
+    } = context;
+    const { roomId, identity } = data;
+
+    const participants = await liveKitAPI.room.listParticipants(roomId);
+    const caller = participants.find((p) => p.identity === user.id);
+
+    if (!caller) {
+      throw new Error("You are not a participant of this room");
+    }
+
+    if (caller.attributes?.role !== "owner") {
+      throw new Error("Only the room owner can kick participants");
+    }
+
+    if (identity === user.id) {
+      throw new Error("Owner cannot ban themselves");
+    }
+
+    await liveKitAPI.room.removeParticipant(roomId, identity);
+
+    await prisma.bannedRoom.upsert({
+      where: {
+        userId_roomId: {
+          userId: identity,
+          roomId,
+        },
+      },
+      update: {},
+      create: {
+        userId: identity,
+        roomId,
+      },
+    });
   });

@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { AlertCircleIcon, SearchIcon } from "lucide-react";
 import { buttonVariants } from "#/shared/components/ui/button";
 
@@ -16,10 +17,10 @@ function RoomNotFound() {
           </p>
         </div>
 
-        <a href="/" className={buttonVariants()}>
+        <Link to="/" className={buttonVariants()}>
           <SearchIcon />
           Browse Rooms
-        </a>
+        </Link>
       </div>
     </div>
   );

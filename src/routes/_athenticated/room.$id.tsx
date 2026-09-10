@@ -3,6 +3,7 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { getRoomToken } from "#/features/room/actions/room.functions";
 import RoomContent from "#/features/room/components/RoomContent";
+import RoomError from "#/features/room/components/RoomError";
 import RoomNotFound from "#/features/room/components/RoomNotFound";
 import { roomQueries } from "#/features/room/queries/roomQueries";
 import { Button } from "#/shared/components/ui/button";
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/_athenticated/room/$id")({
   },
   pendingComponent: () => <p>Loading</p>,
   notFoundComponent: RoomNotFound,
+  errorComponent: RoomError,
 });
 
 function RouteComponent() {

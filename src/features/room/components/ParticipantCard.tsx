@@ -1,37 +1,33 @@
 import {
   BarVisualizer,
-  TrackRefContext,
-  useMaybeTrackRefContext,
+  useLocalParticipant,
   useParticipantContext,
-  useTracks,
+  useParticipantTracks,
 } from "@livekit/components-react";
 import { Track } from "livekit-client";
-import { MicOffIcon } from "lucide-react";
+import { MicOffIcon, VolumeXIcon } from "lucide-react";
+import { useState } from "react";
 import { Avatar, AvatarFallback } from "#/shared/components/ui/avatar";
+import { Badge } from "#/shared/components/ui/badge";
 import { cn } from "#/shared/lib/utils";
+import ParticipantOptionsPopover from "./ParticipantOptionsPopover";
 
 function ParticipantCard() {
   const participant = useParticipantContext();
+  const { localParticipant } = useLocalParticipant();
+  const [isLocallyMuted, setIsLocallyMuted] = useState(false);
 
-  const audioTracks = useTracks([Track.Source.Microphone]);
-  const participantTrack = audioTracks.find(
-    (track) => track.participant.identity === participant.identity,
+  const audioTracks = useParticipantTracks(
+    [Track.Source.Microphone],
+    participant.identity,
   );
+  const track = audioTracks[0];
 
-  return (
-    <TrackRefContext.Provider value={participantTrack}>
-      <ParticipantCardContent />
-    </TrackRefContext.Provider>
-  );
-}
-
-function ParticipantCardContent() {
-  const participant = useParticipantContext();
-  const trackRef = useMaybeTrackRefContext();
-
+  const isOwner = participant.attributes?.role === "owner";
   const displayName = participant.name || participant.identity;
   const isSpeaking = participant.isSpeaking;
-  const isMuted = !trackRef || trackRef.publication?.isMuted;
+  const isRemotelyMuted =
+    !track || track.publication?.isMuted || !track.publication?.track;
 
   return (
     <div
@@ -40,17 +36,36 @@ function ParticipantCardContent() {
         isSpeaking && "ring-2 ring-green-500",
       )}
     >
-      <div className="absolute left-5 top-5">
-        {isMuted && <MicOffIcon className="size-5" />}
+      <div className="absolute left-5 top-5 flex items-center gap-2">
+        {isRemotelyMuted && (
+          <MicOffIcon className="size-5 text-muted-foreground" />
+        )}
+        {isLocallyMuted && (
+          <VolumeXIcon className="size-5 text-muted-foreground" />
+        )}
       </div>
 
-      <Avatar className="size-32">
-        <AvatarFallback>{displayName.slice(0, 3).toUpperCase()}</AvatarFallback>
-      </Avatar>
-      <div>@{displayName}</div>
+      <div className="absolute right-5 top-5 flex gap-2">
+        {isOwner && <Badge className="h-8">Owner</Badge>}
+        {participant.identity !== localParticipant.identity && (
+          <ParticipantOptionsPopover
+            isLocallyMuted={isLocallyMuted}
+            setIsLocallyMuted={setIsLocallyMuted}
+          />
+        )}
+      </div>
+
+      <div className="flex mt-12 items-center gap-4">
+        <Avatar className="size-16">
+          <AvatarFallback>
+            {displayName.slice(0, 3).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div>@{displayName}</div>
+      </div>
 
       <div className="h-12">
-        <BarVisualizer barCount={7} className="gap-2!">
+        <BarVisualizer track={track} barCount={7} className="gap-2!">
           <div className="bg-foreground/80!"></div>
         </BarVisualizer>
       </div>
