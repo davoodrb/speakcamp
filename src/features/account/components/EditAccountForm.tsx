@@ -25,6 +25,11 @@ function EditAccountForm({ user }: { user: User }) {
       try {
         await updateAccount({ data: { bio: value.bio } });
         toast.success("Bio updated successfully");
+        form.reset({
+          email,
+          username: displayUsername,
+          bio: value.bio,
+        });
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Something went wrong!";

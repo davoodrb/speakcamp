@@ -21,7 +21,6 @@ export const updateAccount = createServerFn({ method: "POST" })
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
       data: { bio: data.bio },
-      select: { id: true, bio: true },
     });
 
     return updatedUser;
