@@ -9,23 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as AthenticatedRouteImport } from './routes/_athenticated'
+import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AthenticatedAccountRouteImport } from './routes/_athenticated/account'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicContactRouteImport } from './routes/_public/contact'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AthenticatedRoomIdRouteImport } from './routes/_athenticated/room.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as ApiLivekitWebhookRouteImport } from './routes/api/livekit.webhook'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AthenticatedRoute = AthenticatedRouteImport.update({
   id: '/_athenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -37,6 +38,16 @@ const AthenticatedAccountRoute = AthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => AthenticatedRoute,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicContactRoute = PublicContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => PublicRoute,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
@@ -65,9 +76,10 @@ const ApiLivekitWebhookRoute = ApiLivekitWebhookRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/account': typeof AthenticatedAccountRoute
+  '/contact': typeof PublicContactRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/': typeof AuthIndexRoute
   '/room/$id': typeof AthenticatedRoomIdRoute
@@ -75,8 +87,9 @@ export interface FileRoutesByFullPath {
   '/api/livekit/webhook': typeof ApiLivekitWebhookRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
   '/account': typeof AthenticatedAccountRoute
+  '/contact': typeof PublicContactRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth': typeof AuthIndexRoute
   '/room/$id': typeof AthenticatedRoomIdRoute
@@ -85,11 +98,13 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_athenticated': typeof AthenticatedRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/_athenticated/account': typeof AthenticatedAccountRoute
+  '/_public/contact': typeof PublicContactRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/_public/': typeof PublicIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/_athenticated/room/$id': typeof AthenticatedRoomIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -101,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/account'
+    | '/contact'
     | '/auth/sign-up'
     | '/auth/'
     | '/room/$id'
@@ -110,6 +126,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
+    | '/contact'
     | '/auth/sign-up'
     | '/auth'
     | '/room/$id'
@@ -117,11 +134,13 @@ export interface FileRouteTypes {
     | '/api/livekit/webhook'
   id:
     | '__root__'
-    | '/'
     | '/_athenticated'
+    | '/_public'
     | '/auth'
     | '/_athenticated/account'
+    | '/_public/contact'
     | '/auth/sign-up'
+    | '/_public/'
     | '/auth/'
     | '/_athenticated/room/$id'
     | '/api/auth/$'
@@ -129,8 +148,8 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AthenticatedRoute: typeof AthenticatedRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiLivekitWebhookRoute: typeof ApiLivekitWebhookRoute
@@ -138,18 +157,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_athenticated': {
       id: '/_athenticated'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -165,6 +184,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/account'
       preLoaderRoute: typeof AthenticatedAccountRouteImport
       parentRoute: typeof AthenticatedRoute
+    }
+    '/_public/': {
+      id: '/_public/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/contact': {
+      id: '/_public/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof PublicContactRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/auth/': {
       id: '/auth/'
@@ -218,6 +251,19 @@ const AthenticatedRouteWithChildren = AthenticatedRoute._addFileChildren(
   AthenticatedRouteChildren,
 )
 
+interface PublicRouteChildren {
+  PublicContactRoute: typeof PublicContactRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicContactRoute: PublicContactRoute,
+  PublicIndexRoute: PublicIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 interface AuthRouteChildren {
   AuthSignUpRoute: typeof AuthSignUpRoute
   AuthIndexRoute: typeof AuthIndexRoute
@@ -231,8 +277,8 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AthenticatedRoute: AthenticatedRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiLivekitWebhookRoute: ApiLivekitWebhookRoute,

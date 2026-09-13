@@ -4,12 +4,11 @@ import { authClient } from "#/features/auth/lib/auth-client";
 import CreateRoomDialog from "#/features/room/components/CreateRoomDialog";
 import RoomsList from "#/features/room/components/RoomsList";
 import { roomQueries } from "#/features/room/queries/roomQueries";
-import Header from "#/shared/components/layout/header";
 import { Spinner } from "#/shared/components/ui/spinner";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_public/")({
   loader: ({ context }) => {
-    context.queryClient.fetchQuery(roomQueries.list());
+    context.queryClient.query(roomQueries.list());
   },
   component: Home,
 });
@@ -22,16 +21,13 @@ function Home() {
   );
 
   return (
-    <>
-      <Header user={session?.user} userIsLoading={isSessionLoading} />
-      <div className="max-w-xl mx-auto p-4 space-y-4">
-        <CreateRoomDialog
-          isUserLoggedIn={!!session?.user}
-          isLoading={isSessionLoading}
-        />
+    <div className="max-w-xl mx-auto p-4 space-y-4">
+      <CreateRoomDialog
+        isUserLoggedIn={!!session?.user}
+        isLoading={isSessionLoading}
+      />
 
-        {isRoomsLoading ? <Spinner /> : <RoomsList rooms={rooms} />}
-      </div>
-    </>
+      {isRoomsLoading ? <Spinner /> : <RoomsList rooms={rooms} />}
+    </div>
   );
 }
