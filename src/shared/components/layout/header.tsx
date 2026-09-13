@@ -12,21 +12,21 @@ function Header({
   userIsLoading?: boolean;
 }) {
   return (
-    <header className="flex items-center justify-between p-4">
+    <header className="flex items-center justify-between p-4 container mx-auto">
       <div>
-        <Link to="/">
-          <h1 className="text-bold text-2xl">Rootalk 🗣️</h1>
+        <Link to="/" className="group flex flex-col leading-none">
+          <h1 className="text-xl font-semibold tracking-tight">Rootalk 🗣️</h1>
+          <p className="mt-1 text-[11px] font-medium tracking-wide text-muted-foreground/70">
+            Speak. Connect. Improve.
+          </p>
         </Link>
-        <p className="text-xs text-muted-foreground">
-          Speak. Connect. Improve.
-        </p>
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1">
           <ModeToggle />
           <Link
             to="/contact"
-            className={buttonVariants({ variant: "outline", size: "icon" })}
+            className={buttonVariants({ variant: "ghost", size: "icon" })}
             aria-label="Contact"
           >
             <InfoIcon className="size-4" />

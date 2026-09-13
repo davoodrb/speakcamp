@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { LockIcon, PlusIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -27,22 +27,23 @@ function CreateRoomDialog({
     return (
       <Link
         to="/auth"
-        className="block rounded border border-dashed py-8 text-center"
+        className="group flex w-full flex-col items-center justify-center gap-2.5 rounded-xl border border-dashed border-border/70 px-4 py-10 text-sm text-muted-foreground transition-colors duration-200 hover:border-border hover:text-foreground"
       >
-        Join to create room
+        <LockIcon className="size-4 opacity-60" />
+        <span className="tracking-tight">
+          <span className="font-medium text-foreground/80">Sign in</span> to
+          create a room
+        </span>
       </Link>
     );
   }
 
   return (
     <Dialog>
-      <DialogTrigger className="w-full rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 px-4 py-8 text-center text-sm font-medium text-muted-foreground hover:bg-muted transition">
-        <div className="flex flex-col items-center gap-2">
-          <PlusIcon />
-          <span>Create new room</span>
-        </div>
+      <DialogTrigger className="group flex w-full flex-col items-center justify-center gap-2.5 rounded-xl border border-dashed border-border/70 px-4 py-10 text-sm">
+        <PlusIcon className="size-4 transition-transform duration-200 group-hover:rotate-90" />
+        <span className="tracking-tight">Create new room</span>
       </DialogTrigger>
-
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Creating a room</DialogTitle>

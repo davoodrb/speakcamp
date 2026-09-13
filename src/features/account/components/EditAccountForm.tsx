@@ -10,7 +10,10 @@ import {
 } from "#/shared/components/ui/field";
 import { Input } from "#/shared/components/ui/input";
 import { Textarea } from "#/shared/components/ui/textarea";
+import { cn } from "#/shared/lib/utils";
 import type { User } from "#/shared/types/user";
+
+const BIO_MAX = 500;
 
 function EditAccountForm({ user }: { user: User }) {
   const { email, displayUsername, bio } = user;
@@ -44,11 +47,11 @@ function EditAccountForm({ user }: { user: User }) {
         e.preventDefault();
         form.handleSubmit();
       }}
+      className="space-y-6"
     >
       <FieldGroup>
-        <form.Field
-          name="username"
-          children={(field) => {
+        <form.Field name="username">
+          {(field) => {
             const isInvalid =
               field.state.meta.isTouched && !field.state.meta.isValid;
             return (
@@ -59,20 +62,18 @@ function EditAccountForm({ user }: { user: User }) {
                   name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
                   aria-invalid={isInvalid}
-                  placeholder="Login button not working on mobile"
-                  autoComplete="off"
-                  disabled={true}
+                  autoComplete="username"
+                  disabled
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             );
           }}
-        />
-        <form.Field
-          name="email"
-          children={(field) => {
+        </form.Field>
+
+        <form.Field name="email">
+          {(field) => {
             const isInvalid =
               field.state.meta.isTouched && !field.state.meta.isValid;
             return (
@@ -83,25 +84,34 @@ function EditAccountForm({ user }: { user: User }) {
                   name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
                   aria-invalid={isInvalid}
-                  placeholder="Login button not working on mobile"
-                  autoComplete="off"
-                  disabled={true}
+                  autoComplete="email"
+                  disabled
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             );
           }}
-        />
-        <form.Field
-          name="bio"
-          children={(field) => {
+        </form.Field>
+
+        <form.Field name="bio">
+          {(field) => {
             const isInvalid =
               field.state.meta.isTouched && !field.state.meta.isValid;
+            const remaining = BIO_MAX - field.state.value.length;
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor={field.name}>Bio</FieldLabel>
+                <div className="flex items-baseline justify-between">
+                  <FieldLabel htmlFor={field.name}>Bio</FieldLabel>
+                  <span
+                    className={cn(
+                      "text-xs tabular-nums text-muted-foreground/70",
+                      remaining <= 20 && "text-destructive/80",
+                    )}
+                  >
+                    {remaining}
+                  </span>
+                </div>
                 <Textarea
                   id={field.name}
                   name={field.name}
@@ -109,31 +119,32 @@ function EditAccountForm({ user }: { user: User }) {
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   aria-invalid={isInvalid}
-                  placeholder="Tell us about yourself (max 500 characters)"
-                  maxLength={500}
+                  placeholder="Tell us about yourself…"
+                  maxLength={BIO_MAX}
                   rows={4}
+                  className="resize-none"
                 />
-                <div className="text-right text-sm text-muted-foreground">
-                  {field.state.value.length}/500
-                </div>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             );
           }}
-        />
+        </form.Field>
       </FieldGroup>
+
       <form.Subscribe
-        selector={(state) => [state.isDirty, state.isSubmitting]}
-        children={([isDirty, isSubmitting]) => (
-          <Button
-            type="submit"
-            className="mt-4"
-            disabled={!isDirty || isSubmitting}
-          >
-            {isSubmitting ? "Saving..." : "Save changes"}
-          </Button>
+        selector={(state) => ({
+          isDirty: state.isDirty,
+          isSubmitting: state.isSubmitting,
+        })}
+      >
+        {({ isDirty, isSubmitting }) => (
+          <div className="flex justify-end">
+            <Button type="submit" disabled={!isDirty || isSubmitting}>
+              {isSubmitting ? "Saving…" : "Save changes"}
+            </Button>
+          </div>
         )}
-      />
+      </form.Subscribe>
     </form>
   );
 }

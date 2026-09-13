@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
@@ -16,47 +16,76 @@ function RoomCard({ room }) {
   const { data, isPending } = useQuery(roomQueries.participantsList(room.id));
 
   const participants = data || [];
+  const hasParticipants = !isPending && participants.length > 0;
 
   return (
-    <div className="border rounded p-4 space-y-4">
-      <div>
-        <div className="flex gap-2 items-center">
-          <div>{formatEnumLabel(room.language)}</div>
-          <Badge variant="secondary">{formatEnumLabel(room.level)}</Badge>
+    <div
+      className={cn(
+        "relative flex flex-col gap-5 rounded-xl border border-border/60 bg-card p-5",
+      )}
+    >
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <h3 className="text-base font-semibold tracking-tight">
+            {formatEnumLabel(room.language)}
+          </h3>
+          <Badge
+            variant="secondary"
+            className="rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide"
+          >
+            {formatEnumLabel(room.level)}
+          </Badge>
         </div>
-        <div className="text-sm text-muted-foreground text-ellipsis overflow-hidden line-clamp-2">
+        <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
           {room.desc}
-        </div>
+        </p>
       </div>
 
-      {isPending && (
-        <AvatarGroup>
-          <Skeleton className="size-16 rounded-full" />
-        </AvatarGroup>
-      )}
+      <div className="min-h-8">
+        {isPending && (
+          <div className="flex items-center gap-2">
+            <Skeleton className="size-8 rounded-full" />
+            <Skeleton className="size-8 rounded-full" />
+            <Skeleton className="size-8 rounded-full" />
+          </div>
+        )}
 
-      {!isPending && participants.length > 0 && (
-        <div className="flex items-center gap-2">
-          <AvatarGroup>
-            {participants.map((participant) => (
-              <Avatar key={participant} className="size-16">
-                <AvatarFallback>{participant.slice(0, 3)}</AvatarFallback>
-              </Avatar>
-            ))}
-          </AvatarGroup>
-        </div>
-      )}
+        {hasParticipants && (
+          <div className="flex items-center gap-3">
+            <AvatarGroup>
+              {participants.map((participant) => (
+                <Avatar key={participant} className="size-8 ring-2 ring-card">
+                  <AvatarFallback className="text-[10px] font-medium uppercase">
+                    {participant.slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+            </AvatarGroup>
+            <span className="text-xs text-muted-foreground">
+              {participants.length}{" "}
+              {participants.length === 1 ? "member" : "members"}
+            </span>
+          </div>
+        )}
+
+        {!isPending && participants.length === 0 && (
+          <span className="text-xs italic text-muted-foreground/70">
+            No one here yet
+          </span>
+        )}
+      </div>
 
       <Link
-        className={cn(
-          buttonVariants({ variant: "outline" }),
-          "group w-full justify-center gap-1 transition hover:gap-2 hover:border-primary hover:bg-primary/5",
-        )}
         to="/room/$id"
         params={{ id: room.id }}
+        className={cn(
+          buttonVariants({ variant: "outline" }),
+          "mt-auto w-full justify-center gap-1.5 rounded-full font-medium",
+          "transition-all duration-300",
+        )}
       >
         <span>Join Room</span>
-        <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        <ArrowUpRightIcon className="size-3.5 transition-transform duration-300" />
       </Link>
     </div>
   );

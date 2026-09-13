@@ -41,21 +41,6 @@ function RouteComponent() {
         <p className="text-sm text-muted-foreground">
           This is a learning project. New features will be added over time.
         </p>
-        <div className="space-y-2">
-          <p className="text-xs font-sm tracking-wide text-muted-foreground">
-            Made with
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {["TanStack Start", "React", "Tailwind", "Shadcn/ui"].map((t) => (
-              <span
-                key={t}
-                className="rounded-full border bg-muted px-2.5 py-0.5 text-xs text-muted-foreground"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
       </section>
 
       <section className="space-y-4">
