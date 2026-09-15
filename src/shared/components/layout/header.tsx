@@ -15,7 +15,7 @@ function Header({
     <header className="flex items-center justify-between p-4 container mx-auto">
       <div>
         <Link to="/" className="group flex flex-col leading-none">
-          <h1 className="text-xl font-semibold tracking-tight">Rootalk 🗣️</h1>
+          <h1 className="text-xl font-semibold tracking-tight">SpeakCamp 🗣️</h1>
           <p className="mt-1 text-[11px] font-medium tracking-wide text-muted-foreground/70">
             Speak. Connect. Improve.
           </p>

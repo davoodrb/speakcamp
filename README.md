@@ -1,4 +1,4 @@
-# Rootalk
+# SpeakCamp
 
 Real-time language practice rooms powered by LiveKit. Users create or join audio rooms to practice speaking in their target language with others at similar proficiency levels.
 
@@ -6,16 +6,16 @@ Real-time language practice rooms powered by LiveKit. Users create or join audio
 
 **Stack**: TanStack React Start + TypeScript + PostgreSQL (Prisma) + LiveKit
 
-| Layer | Technology |
-|-------|------------|
-| Framework | TanStack Start (file-based routing, SSR) |
-| Routing | TanStack Router (type-safe, file-based) |
-| State/Data | TanStack Query (server state, caching) |
-| Auth | Better Auth (email/password + username) |
-| Real-time | LiveKit (WebRTC audio rooms) |
-| Database | PostgreSQL + Prisma ORM |
-| Styling | TailwindCSS v4 + shadcn-style components |
-| Dev Tools | Biome (lint/format), Vitest, Husky |
+| Layer      | Technology                               |
+| ---------- | ---------------------------------------- |
+| Framework  | TanStack Start (file-based routing, SSR) |
+| Routing    | TanStack Router (type-safe, file-based)  |
+| State/Data | TanStack Query (server state, caching)   |
+| Auth       | Better Auth (email/password + username)  |
+| Real-time  | LiveKit (WebRTC audio rooms)             |
+| Database   | PostgreSQL + Prisma ORM                  |
+| Styling    | TailwindCSS v4 + shadcn-style components |
+| Dev Tools  | Biome (lint/format), Vitest, Husky       |
 
 ### Route Structure
 
@@ -62,14 +62,14 @@ pnpm dev
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `BETTER_AUTH_URL` | App URL (e.g., `http://localhost:3000`) | Yes |
-| `BETTER_AUTH_SECRET` | 32+ char secret for session signing | Yes |
-| `LIVEKIT_API_KEY` | LiveKit API key | Yes |
-| `LIVEKIT_API_SECRET` | LiveKit API secret | Yes |
-| `VITE_LIVEKIT_URL` | LiveKit WebSocket URL (client) | Yes |
+| Variable             | Description                             | Required |
+| -------------------- | --------------------------------------- | -------- |
+| `DATABASE_URL`       | PostgreSQL connection string            | Yes      |
+| `BETTER_AUTH_URL`    | App URL (e.g., `http://localhost:3000`) | Yes      |
+| `BETTER_AUTH_SECRET` | 32+ char secret for session signing     | Yes      |
+| `LIVEKIT_API_KEY`    | LiveKit API key                         | Yes      |
+| `LIVEKIT_API_SECRET` | LiveKit API secret                      | Yes      |
+| `VITE_LIVEKIT_URL`   | LiveKit WebSocket URL (client)          | Yes      |
 
 ## Authentication
 

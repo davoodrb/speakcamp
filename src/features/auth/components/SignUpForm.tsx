@@ -55,7 +55,7 @@ function SignUpForm() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-lg font-bold">Rootalk 🗣️ | Create account</h1>
+        <h1 className="text-lg font-bold">SpeakCamp 🗣️ | Create account</h1>
       </div>
       <form
         onSubmit={(e) => {

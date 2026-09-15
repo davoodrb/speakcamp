@@ -58,7 +58,7 @@ function SignInForm() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-lg font-bold">Rootalk 🗣️</h1>
+        <h1 className="text-lg font-bold">SpeakCamp 🗣️</h1>
       </div>
       <form
         onSubmit={(e) => {
@@ -115,7 +115,7 @@ function SignInForm() {
         </Button>
       </form>
       <div className="text-sm">
-        <span>New to Rootalk?</span>
+        <span>New to SpeakCamp?</span>
         <Button variant="link">
           <Link to="/auth/sign-up">create account</Link>
         </Button>
