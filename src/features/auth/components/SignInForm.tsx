@@ -13,7 +13,7 @@ import { Input } from "#/shared/components/ui/input";
 import { useSignIn } from "../hooks/use-auth";
 
 const loginFormSchema = z.object({
-  identifier: z.string(),
+  identifier: z.string().min(1, "Username/Email is required"),
   password: z.string().min(1, "Password is required"),
 });
 

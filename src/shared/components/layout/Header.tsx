@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { Image } from "@unpic/react";
 import { InfoIcon } from "lucide-react";
 import { buttonVariants } from "#/shared/components/ui/button";
 import { Skeleton } from "#/shared/components/ui/skeleton";
-import ModeToggle from "./mode-toggle";
+import ModeToggle from "./ModeToggle";
 
 function Header({
   user,
@@ -14,20 +15,22 @@ function Header({
   return (
     <header className="flex items-center justify-between p-4 container mx-auto">
       <div>
-        <Link to="/" className="group flex flex-col leading-none max-w-52">
-          <img
-            src="/speakcamp-logo-h.png"
-            alt="speakcamp"
-            className="dark:hidden"
-          />
-          <img
+        <Link to="/" className="block max-w-48">
+          <Image
             src="/speakcamp-logo-h-d.png"
+            layout="fullWidth"
             alt="speakcamp"
             className="hidden dark:block"
           />
+          <Image
+            src="/speakcamp-logo-h.png"
+            layout="fullWidth"
+            alt="speakcamp"
+            className="dark:hidden"
+          />
         </Link>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <ModeToggle />
           <Link
@@ -42,7 +45,9 @@ function Header({
           <Skeleton className="w-16 self-stretch" />
         ) : user ? (
           <Link to="/account" className={buttonVariants()}>
-            {user.displayUsername.slice(0, 12)}
+            {user.displayUsername.length > 6
+              ? `${user.displayUsername.slice(0, 6)}...`
+              : user.displayUsername}
           </Link>
         ) : (
           <Link to="/auth" className={buttonVariants()}>
