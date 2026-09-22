@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { authClient } from "#/features/auth/lib/auth-client";
 import CreateRoomDialog from "#/features/room/components/CreateRoomDialog";
 import RoomsList from "#/features/room/components/RoomsList";
@@ -14,11 +15,46 @@ export const Route = createFileRoute("/_public/")({
 });
 
 function Home() {
+  const queryClient = useQueryClient();
+
   const { data: session, isPending: isSessionLoading } =
     authClient.useSession();
+
   const { data: rooms, isLoading: isRoomsLoading } = useQuery(
     roomQueries.list(),
   );
+
+  useEffect(() => {
+    const sse = new EventSource("/api/sse/rooms");
+
+    sse.addEventListener("create", (e) => {
+      const room = JSON.parse(e.data);
+
+      queryClient.setQueryData(roomQueries.list().queryKey, (oldRooms) => {
+        if (!oldRooms) return [room];
+
+        if (oldRooms.some((existingRoom) => existingRoom.id === room.id)) {
+          return oldRooms;
+        }
+
+        return [...oldRooms, room];
+      });
+    });
+    sse.addEventListener("delete", (e) => {
+      console.log("DELETE RECIVED!");
+      const room = JSON.parse(e.data);
+
+      queryClient.setQueryData(roomQueries.list().queryKey, (oldRooms) => {
+        if (!oldRooms) return [];
+
+        return oldRooms.filter((r) => r.id !== room.id);
+      });
+    });
+
+    return () => {
+      sse.close();
+    };
+  }, [queryClient]);
 
   return (
     <div className="max-w-xl mx-auto p-4 space-y-4">

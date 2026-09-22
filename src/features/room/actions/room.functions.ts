@@ -5,6 +5,7 @@ import authMiddleware from "#/middlewares/auth";
 import { env } from "#/shared/lib/env";
 import { liveKitAPI } from "#/shared/lib/livekit";
 import { prisma } from "#/shared/lib/prisma.server";
+import { broadcastEvent } from "#/shared/lib/sse.server";
 import { createRoomFormSchema } from "../schemas";
 
 export const getRooms = createServerFn({ method: "GET" }).handler(async () => {
@@ -62,28 +63,9 @@ export const createRoom = createServerFn({ method: "POST" })
       name: room.id,
       emptyTimeout: EMPTY_TIME_OUT,
     });
+    broadcastEvent("room", room, { eventName: "create" });
 
     return room;
-  });
-
-export const deleteRoom = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
-  .validator((data: { id: string }) => data)
-  .handler(async ({ data, context }) => {
-    const { session } = context;
-
-    const room = await prisma.room.update({
-      where: {
-        id: data.id,
-        createdBy: session.user.id,
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
-
-    return room.id;
   });
 
 export const getRoomToken = createServerFn({ method: "POST" })

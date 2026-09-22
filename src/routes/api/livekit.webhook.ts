@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { WebhookReceiver } from "livekit-server-sdk";
 import { env } from "#/shared/lib/env";
 import { prisma } from "#/shared/lib/prisma.server";
+import { broadcastEvent } from "#/shared/lib/sse.server";
 
 const receiver = new WebhookReceiver(
   env.LIVEKIT_API_KEY,
@@ -23,9 +24,12 @@ export const Route = createFileRoute("/api/livekit/webhook")({
         const event = await receiver.receive(body, authorization);
 
         if (event.event === "room_finished" && event.room) {
-          await prisma.room.update({
+          const room = await prisma.room.update({
             where: { id: event.room.name },
             data: { deletedAt: new Date() },
+          });
+          broadcastEvent("room", room, {
+            eventName: "delete",
           });
         }
 

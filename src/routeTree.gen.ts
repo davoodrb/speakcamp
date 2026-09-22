@@ -20,6 +20,7 @@ import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AthenticatedRoomIdRouteImport } from './routes/_athenticated/room.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as ApiLivekitWebhookRouteImport } from './routes/api/livekit.webhook'
+import { Route as ApiSseRoomsRouteImport } from './routes/api/sse.rooms'
 
 const AthenticatedRoute = AthenticatedRouteImport.update({
   id: '/_athenticated',
@@ -74,6 +75,11 @@ const ApiLivekitWebhookRoute = ApiLivekitWebhookRouteImport.update({
   path: '/api/livekit/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSseRoomsRoute = ApiSseRoomsRouteImport.update({
+  id: '/api/sse/rooms',
+  path: '/api/sse/rooms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/room/$id': typeof AthenticatedRoomIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/livekit/webhook': typeof ApiLivekitWebhookRoute
+  '/api/sse/rooms': typeof ApiSseRoomsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/room/$id': typeof AthenticatedRoomIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/livekit/webhook': typeof ApiLivekitWebhookRoute
+  '/api/sse/rooms': typeof ApiSseRoomsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/_athenticated/room/$id': typeof AthenticatedRoomIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/livekit/webhook': typeof ApiLivekitWebhookRoute
+  '/api/sse/rooms': typeof ApiSseRoomsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
     | '/room/$id'
     | '/api/auth/$'
     | '/api/livekit/webhook'
+    | '/api/sse/rooms'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/room/$id'
     | '/api/auth/$'
     | '/api/livekit/webhook'
+    | '/api/sse/rooms'
   id:
     | '__root__'
     | '/_athenticated'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/_athenticated/room/$id'
     | '/api/auth/$'
     | '/api/livekit/webhook'
+    | '/api/sse/rooms'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiLivekitWebhookRoute: typeof ApiLivekitWebhookRoute
+  ApiSseRoomsRoute: typeof ApiSseRoomsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -234,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiLivekitWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/sse/rooms': {
+      id: '/api/sse/rooms'
+      path: '/api/sse/rooms'
+      fullPath: '/api/sse/rooms'
+      preLoaderRoute: typeof ApiSseRoomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -282,6 +302,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiLivekitWebhookRoute: ApiLivekitWebhookRoute,
+  ApiSseRoomsRoute: ApiSseRoomsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
