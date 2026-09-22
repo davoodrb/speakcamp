@@ -77,7 +77,9 @@ export const getRoomToken = createServerFn({ method: "POST" })
     } = context;
     const { roomId } = data;
 
-    const room = await prisma.room.findFirst({ where: { id: roomId } });
+    const room = await prisma.room.findFirst({
+      where: { id: roomId, deletedAt: null },
+    });
     if (!room) {
       throw notFound();
     }
