@@ -35,6 +35,7 @@ function CreateRoomForm() {
       language: null as Language | null,
       level: null as Level | null,
       desc: "",
+      maxParticipants: 6,
     },
 
     onSubmit: async ({ value }) => {
@@ -125,6 +126,44 @@ function CreateRoomForm() {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        </form.Field>
+        <form.Field name="maxParticipants">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Max Participants</FieldLabel>
+
+                <Select
+                  disabled={isSubmitting}
+                  value={String(field.state.value)}
+                  onValueChange={(value) => field.handleChange(Number(value))}
+                >
+                  <SelectTrigger id={field.name} aria-invalid={isInvalid}>
+                    <SelectValue placeholder="Select max participants" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectGroup>
+                      {Array.from({ length: 6 }, (_, index) => {
+                        const value = index + 1;
+
+                        return (
+                          <SelectItem key={value} value={String(value)}>
+                            {value}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             );

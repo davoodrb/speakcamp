@@ -35,10 +35,10 @@ enum Level {
 model Room {
   id String @id @default(cuid())
 
-  desc     String?
-  language Language
-  level    Level
-  maxUsers Int      @default(6)
+  desc            String?
+  language        Language
+  level           Level
+  maxParticipants Int      @default(6)
 
   createdBy String?
   createdAt DateTime  @default(now())

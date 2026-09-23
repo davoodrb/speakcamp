@@ -224,7 +224,7 @@ src/
 Key models in `prisma/schema.prisma`:
 
 - **User** - Auth + profile (username, displayUsername)
-- **Room** - Language practice room (language, level, maxUsers, creator)
+- **Room** - Language practice room (language, level, maxParticipants, creator)
 - **RoomSession** - User join/leave tracking
 - **Session/Account/Verification** - Better Auth tables
 

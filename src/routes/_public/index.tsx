@@ -41,7 +41,6 @@ function Home() {
       });
     });
     sse.addEventListener("delete", (e) => {
-      console.log("DELETE RECIVED!");
       const room = JSON.parse(e.data);
 
       queryClient.setQueryData(roomQueries.list().queryKey, (oldRooms) => {
@@ -49,6 +48,38 @@ function Home() {
 
         return oldRooms.filter((r) => r.id !== room.id);
       });
+    });
+    sse.addEventListener("participant_joined", (e) => {
+      const {
+        event: { room, participant },
+      } = JSON.parse(e.data);
+
+      queryClient.setQueryData(
+        roomQueries.participantsList(room.name).queryKey,
+        (oldParticipants) => {
+          const current = oldParticipants ?? [];
+
+          if (current.includes(participant.name)) {
+            return current;
+          }
+
+          return [...current, participant.name];
+        },
+      );
+    });
+    sse.addEventListener("participant_left", (e) => {
+      const {
+        event: { room, participant },
+      } = JSON.parse(e.data);
+
+      queryClient.setQueryData(
+        roomQueries.participantsList(room.name).queryKey,
+        (oldParticipants) => {
+          return oldParticipants
+            ? oldParticipants.filter((p) => p !== participant.name)
+            : [];
+        },
+      );
     });
 
     return () => {

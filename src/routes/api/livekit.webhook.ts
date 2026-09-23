@@ -32,6 +32,33 @@ export const Route = createFileRoute("/api/livekit/webhook")({
             eventName: "delete",
           });
         }
+        if (event.event === "participant_joined" && event.room) {
+          broadcastEvent(
+            "room",
+            { event },
+            {
+              eventName: "participant_joined",
+            },
+          );
+        }
+        if (event.event === "participant_joined" && event.room) {
+          broadcastEvent(
+            "room",
+            { event },
+            {
+              eventName: "participant_joined",
+            },
+          );
+        }
+        if (event.event === "participant_left" && event.room) {
+          broadcastEvent(
+            "room",
+            { event },
+            {
+              eventName: "participant_left",
+            },
+          );
+        }
 
         return new Response("OK", { status: 200 });
       },

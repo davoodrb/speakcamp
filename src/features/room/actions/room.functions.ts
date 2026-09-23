@@ -57,11 +57,13 @@ export const createRoom = createServerFn({ method: "POST" })
         level: data.level,
         language: data.language,
         desc: data.desc,
+        maxParticipants: data.maxParticipants,
       },
     });
     await liveKitAPI.room.createRoom({
       name: room.id,
       emptyTimeout: EMPTY_TIME_OUT,
+      maxParticipants: data.maxParticipants,
     });
     broadcastEvent("room", room, { eventName: "create" });
 
