@@ -94,9 +94,15 @@ export const getRoomToken = createServerFn({ method: "POST" })
         },
       },
     });
-
     if (isBanned) {
       throw new Error("You are banned from this room");
+    }
+
+    const currentParticipants = await liveKitAPI.room.listParticipants(roomId);
+    const maxParticipants = room.maxParticipants;
+    const isRoomFull = currentParticipants.length >= maxParticipants;
+    if (isRoomFull) {
+      throw new Error("This room is full and you can't join");
     }
 
     const isOwner = room.createdBy === user.id;
