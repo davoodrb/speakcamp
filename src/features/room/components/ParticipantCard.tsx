@@ -16,7 +16,8 @@ import ParticipantOptionsPopover from "./ParticipantOptionsPopover";
 function ParticipantCard() {
   const participant = useParticipantContext();
   const { localParticipant } = useLocalParticipant();
-  const [isLocallyMuted, setIsLocallyMuted] = useState(false);
+  const [volume, setVolume] = useState(100);
+  const isLocallyMuted = volume === 0;
 
   const audioTracks = useParticipantTracks(
     [Track.Source.Microphone],
@@ -49,10 +50,7 @@ function ParticipantCard() {
       <div className="absolute right-5 top-5 flex gap-2">
         {isOwner && <Badge className="h-8">Owner</Badge>}
         {participant.identity !== localParticipant.identity && (
-          <ParticipantOptionsPopover
-            isLocallyMuted={isLocallyMuted}
-            setIsLocallyMuted={setIsLocallyMuted}
-          />
+          <ParticipantOptionsPopover volume={volume} setVolume={setVolume} />
         )}
       </div>
 

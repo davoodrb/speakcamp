@@ -33,7 +33,7 @@ function RoomCard({ room }) {
             {formatEnumLabel(room.language)}
           </h3>
 
-          <Badge className="rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+          <Badge className="rounded-full tracking-wider">
             {formatEnumLabel(room.level)}
           </Badge>
 
