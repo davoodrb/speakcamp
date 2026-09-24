@@ -126,11 +126,10 @@ export const getRoomParticipantsLivekit = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const participants = await liveKitAPI.room.listParticipants(data.roomId);
 
-    const participantNames = participants.map(
-      (participant) => participant.name,
-    );
-
-    return participantNames;
+    return participants.map((participant) => ({
+      identity: participant.identity,
+      name: participant.name,
+    }));
   });
 
 export const removeParticipant = createServerFn({ method: "POST" })

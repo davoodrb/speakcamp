@@ -23,7 +23,6 @@ import { removeParticipant } from "../actions/room.functions";
 type ParticipantOptionsPopoverProps = {
   isLocallyMuted: boolean;
   setIsLocallyMuted: (muted: boolean) => void;
-  isOwner: boolean;
 };
 
 function ParticipantOptionsPopover({

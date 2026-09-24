@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRightIcon } from "lucide-react";
 
+import ProfilePopover from "#/features/account/components/ProfilePopover";
 import {
   Avatar,
   AvatarFallback,
@@ -58,20 +59,21 @@ function RoomCard({ room }) {
             ))}
           </div>
         ) : hasParticipants ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             <AvatarGroup>
               {participants.map((participant) => (
-                <Avatar key={participant} className="size-8 ring-2 ring-card">
-                  <AvatarFallback className="text-[10px] font-medium uppercase">
-                    {participant.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
+                <ProfilePopover
+                  key={participant.identity}
+                  userId={participant.identity}
+                >
+                  <Avatar className="size-8 cursor-pointer ring-2 ring-card">
+                    <AvatarFallback className="text-[10px] font-medium uppercase">
+                      {participant.name.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                </ProfilePopover>
               ))}
             </AvatarGroup>
-
-            <span className="text-xs text-muted-foreground">
-              {participantCount} {participantCount === 1 ? "member" : "members"}
-            </span>
           </div>
         ) : (
           <span className="text-xs italic text-muted-foreground/70">

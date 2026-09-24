@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form-start";
 import { toast } from "sonner";
-import { updateAccount } from "#/features/account/actions/update-account.functions";
+import { updateAccount } from "#/features/account/actions/account.functions";
 import { Button } from "#/shared/components/ui/button";
 import {
   Field,

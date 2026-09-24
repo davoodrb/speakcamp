@@ -7,6 +7,7 @@ import {
 import { Track } from "livekit-client";
 import { MicOffIcon, VolumeXIcon } from "lucide-react";
 import { useState } from "react";
+import ProfilePopover from "#/features/account/components/ProfilePopover";
 import { Avatar, AvatarFallback } from "#/shared/components/ui/avatar";
 import { Badge } from "#/shared/components/ui/badge";
 import { cn } from "#/shared/lib/utils";
@@ -55,13 +56,17 @@ function ParticipantCard() {
         )}
       </div>
 
-      <div className="flex mt-12 items-center gap-4">
-        <Avatar className="size-16">
-          <AvatarFallback>
-            {displayName.slice(0, 3).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div>@{displayName}</div>
+      <div className="flex mt-12 w-full">
+        <ProfilePopover userId={participant.identity}>
+          <div className="w-full border p-2 flex items-center gap-4 justify-center cursor-pointer">
+            <Avatar className="size-16 shrink-0">
+              <AvatarFallback>
+                {displayName.slice(0, 3).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="overflow-hidden text-ellipsis">@{displayName}</div>
+          </div>
+        </ProfilePopover>
       </div>
 
       <div className="h-12">

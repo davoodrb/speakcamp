@@ -59,11 +59,14 @@ function Home() {
         (oldParticipants) => {
           const current = oldParticipants ?? [];
 
-          if (current.includes(participant.name)) {
+          if (current.some((p) => p.identity === participant.identity)) {
             return current;
           }
 
-          return [...current, participant.name];
+          return [
+            ...current,
+            { identity: participant.identity, name: participant.name },
+          ];
         },
       );
     });
@@ -76,7 +79,7 @@ function Home() {
         roomQueries.participantsList(room.name).queryKey,
         (oldParticipants) => {
           return oldParticipants
-            ? oldParticipants.filter((p) => p !== participant.name)
+            ? oldParticipants.filter((p) => p.identity !== participant.identity)
             : [];
         },
       );
