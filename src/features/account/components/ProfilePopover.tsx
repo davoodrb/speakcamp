@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { CalendarIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { authClient } from "#/features/auth/lib/auth-client";
+import ReportUserDialog from "#/features/report/components/ReportUserDialog";
 import {
   Avatar,
   AvatarFallback,
@@ -38,9 +40,11 @@ function ProfilePopover({ userId, children }: ProfilePopoverProps) {
   const { data: user, isPending } = useQuery(
     accountQueries.publicProfile(userId, open),
   );
+  const { data: session } = authClient.useSession();
 
   const displayName = user?.displayUsername ?? user?.name ?? "";
   const joinLabel = user ? getJoinLabel(user.createdAt) : null;
+  const canReport = Boolean(session?.user) && session?.user.id !== user?.id;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -84,6 +88,13 @@ function ProfilePopover({ userId, children }: ProfilePopoverProps) {
                 <CalendarIcon className="size-3.5" />
                 {joinLabel}
               </p>
+            ) : null}
+
+            {canReport ? (
+              <ReportUserDialog
+                userId={user.id}
+                displayName={user.displayUsername}
+              />
             ) : null}
           </div>
         )}

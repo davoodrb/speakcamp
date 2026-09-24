@@ -32,6 +32,14 @@ enum Level {
   ADVANCED
 }
 
+enum ReportReason {
+  HARASSMENT_OR_BULLYING
+  SEXUAL_OR_INAPPROPRIATE_BEHAVIOR
+  HATE_SPEECH
+  SCAM_OR_SPAM
+  OTHER
+}
+
 model Room {
   id String @id @default(cuid())
 
@@ -99,9 +107,28 @@ model User {
   roomSessions RoomSession[]
   bannedRooms  BannedRoom[]
 
+  reportsMade     UserReport[] @relation("ReportReporter")
+  reportsReceived UserReport[] @relation("ReportReported")
+
   @@unique([email])
   @@unique([username])
   @@map("user")
+}
+
+model UserReport {
+  id             String       @id @default(cuid())
+  reporterId     String
+  reportedUserId String
+  reason         ReportReason
+  details        String?
+
+  createdAt DateTime @default(now())
+
+  reporter     User @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUser User @relation("ReportReported", fields: [reportedUserId], references: [id], onDelete: Cascade)
+
+  @@index([reportedUserId])
+  @@map("user_reports")
 }
 
 model Session {
