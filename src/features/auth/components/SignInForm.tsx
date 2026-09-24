@@ -17,7 +17,7 @@ const loginFormSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-function SignInForm() {
+function SignInForm({ redirect }: { redirect?: string }) {
   const signIn = useSignIn();
 
   const form = useForm({
@@ -38,6 +38,7 @@ function SignInForm() {
         const res = await signIn.mutateAsync({
           [isEmail ? "email" : "username"]: value.identifier,
           password: value.password,
+          redirect,
         });
 
         if (!res) {

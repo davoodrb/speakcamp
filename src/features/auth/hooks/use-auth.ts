@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { authClient } from "../lib/auth-client";
 
 export const useSignUp = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (data: {
@@ -40,19 +40,20 @@ export const useSignUp = () => {
       return { ...result, email, username };
     },
     onSuccess: (_data) => {
-      router.navigate({ to: "/" });
+      navigate({ to: "/" });
     },
   });
 };
 
 export const useSignIn = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (data: {
       email?: string;
       username?: string;
       password: string;
+      redirect?: string;
     }) => {
       const { email, username, password } = data;
 
@@ -86,21 +87,21 @@ export const useSignIn = () => {
         return result;
       }
     },
-    onSuccess: () => {
-      router.navigate({ to: "/" });
+    onSuccess: (_data, variables) => {
+      navigate({ to: variables.redirect ?? "/" });
     },
   });
 };
 
 export const useLogout = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async () => {
       await authClient.signOut();
     },
     onSuccess: () => {
-      router.navigate({ to: "/" });
+      navigate({ to: "/" });
       toast.success("Logged out successfully");
     },
   });
