@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import ActivityStats from "#/features/account/components/ActivityStats";
 import EditAccountForm from "#/features/account/components/EditAccountForm";
 import { useLogout } from "#/features/auth/hooks/use-auth";
 import { Button } from "#/shared/components/ui/button";
@@ -26,6 +27,14 @@ function RouteComponent() {
         <div className="rounded-xl border border-border/60 bg-card p-6">
           <EditAccountForm user={user} />
         </div>
+      </section>
+
+      <section className="mt-10 space-y-4 border-t border-border/60 pt-8">
+        <div className="space-y-0.5">
+          <h2 className="text-sm font-medium tracking-tight">Activity</h2>
+        </div>
+
+        <ActivityStats />
       </section>
 
       <section className="mt-10 space-y-4 border-t border-border/60 pt-8">
