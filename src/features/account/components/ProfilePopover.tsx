@@ -20,6 +20,7 @@ import { accountQueries } from "../queries/accountQueries";
 type ProfilePopoverProps = {
   userId: string;
   children: ReactNode;
+  triggerClassName?: string;
 };
 
 function getInitials(name: string) {
@@ -35,7 +36,11 @@ function getJoinLabel(createdAt: Date | string) {
   return `Joined ${monthYear}`;
 }
 
-function ProfilePopover({ userId, children }: ProfilePopoverProps) {
+function ProfilePopover({
+  userId,
+  children,
+  triggerClassName = "w-full",
+}: ProfilePopoverProps) {
   const [open, setOpen] = useState(false);
   const { data: user, isPending } = useQuery(
     accountQueries.publicProfile(userId, open),
@@ -48,7 +53,7 @@ function ProfilePopover({ userId, children }: ProfilePopoverProps) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className="w-full">{children}</PopoverTrigger>
+      <PopoverTrigger className={triggerClassName}>{children}</PopoverTrigger>
 
       <PopoverContent className="w-64 p-4" side="top" align="center">
         {isPending ? (
