@@ -4,6 +4,14 @@ import { toast } from "sonner";
 import { Language, Level } from "#/generated/prisma/enums";
 import { Button } from "#/shared/components/ui/button";
 import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "#/shared/components/ui/combobox";
+import {
   Field,
   FieldError,
   FieldGroup,
@@ -15,7 +23,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "#/shared/components/ui/select";
@@ -78,29 +85,39 @@ function CreateRoomForm() {
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Language *</FieldLabel>
-                <Select
+                <Combobox
+                  items={languageValues}
+                  value={field.state.value}
+                  onValueChange={(value) =>
+                    field.handleChange(value as Language)
+                  }
+                  itemToStringValue={(language) => formatEnumLabel(language)}
                   disabled={isSubmitting}
-                  onValueChange={field.handleChange}
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Languages</SelectLabel>
-                      {languageValues.map((language) => (
-                        <SelectItem key={language} value={language}>
+                  <ComboboxInput
+                    id={field.name}
+                    placeholder="Search language..."
+                    aria-invalid={isInvalid}
+                    disabled={isSubmitting}
+                    onBlur={field.handleBlur}
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No language found.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(language) => (
+                        <ComboboxItem key={language} value={language}>
                           {formatEnumLabel(language)}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             );
           }}
         </form.Field>
+
         <form.Field name="level">
           {(field) => {
             const isInvalid =
@@ -108,29 +125,37 @@ function CreateRoomForm() {
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Level *</FieldLabel>
-                <Select
+                <Combobox
+                  items={levelValues}
+                  value={field.state.value}
+                  onValueChange={(value) => field.handleChange(value as Level)}
+                  itemToStringValue={(level) => formatEnumLabel(level)}
                   disabled={isSubmitting}
-                  onValueChange={field.handleChange}
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Levels</SelectLabel>
-                      {levelValues.map((level) => (
-                        <SelectItem key={level} value={level}>
+                  <ComboboxInput
+                    id={field.name}
+                    placeholder="Search level..."
+                    aria-invalid={isInvalid}
+                    disabled={isSubmitting}
+                    onBlur={field.handleBlur}
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No level found.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(level) => (
+                        <ComboboxItem key={level} value={level}>
                           {formatEnumLabel(level)}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             );
           }}
         </form.Field>
+
         <form.Field name="maxParticipants">
           {(field) => {
             const isInvalid =
@@ -169,6 +194,7 @@ function CreateRoomForm() {
             );
           }}
         </form.Field>
+
         <form.Field name="desc">
           {(field) => {
             const isInvalid =
