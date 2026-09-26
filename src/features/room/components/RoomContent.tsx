@@ -10,8 +10,18 @@ import { useState } from "react";
 import ParticipantCard from "./ParticipantCard";
 import RoomChatSheet from "./RoomChatSheet";
 import RoomControls from "./RoomControls";
+import RoomDetailsHeader from "./RoomDetailsHeader";
 
-function RoomContent() {
+interface RoomContentProps {
+  room: {
+    language: string;
+    level: string;
+    desc: string | null;
+    maxParticipants: number;
+  };
+}
+
+function RoomContent({ room }: RoomContentProps) {
   const participants = useParticipants();
   const { chatMessages, send, isSending } = useChat();
   const { localParticipant } = useLocalParticipant();
@@ -46,6 +56,13 @@ function RoomContent() {
 
   return (
     <div className="space-y-4">
+      <RoomDetailsHeader
+        language={room.language}
+        level={room.level}
+        desc={room.desc}
+        liveCount={participants.length}
+        maxParticipants={room.maxParticipants}
+      />
       <RoomControls onOpenChat={handleOpenChat} unreadCount={unreadCount} />
 
       <div className="container mx-auto flex flex-wrap gap-4 items-stretch justify-center">

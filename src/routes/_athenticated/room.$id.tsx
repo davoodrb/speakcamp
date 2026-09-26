@@ -1,5 +1,6 @@
 import { LiveKitRoom } from "@livekit/components-react";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { getRoomToken } from "#/features/room/actions/room.functions";
 import RoomContent from "#/features/room/components/RoomContent";
@@ -12,7 +13,12 @@ import { env } from "#/shared/lib/env";
 export const Route = createFileRoute("/_athenticated/room/$id")({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    context.queryClient.ensureQueryData(roomQueries.detail(params.id));
+    const room = await context.queryClient.ensureQueryData(
+      roomQueries.detail(params.id),
+    );
+    if (!room) {
+      throw notFound();
+    }
     const token = await getRoomToken({ data: { roomId: params.id } });
     return token;
   },
@@ -23,6 +29,8 @@ export const Route = createFileRoute("/_athenticated/room/$id")({
 
 function RouteComponent() {
   const token = Route.useLoaderData();
+  const { id } = Route.useParams();
+  const { data: room } = useSuspenseQuery(roomQueries.detail(id));
   const router = useRouter();
   const [permissionState, setPermissionState] = useState<{
     status: "checking" | "granted" | "denied" | "error";
@@ -105,6 +113,10 @@ function RouteComponent() {
     );
   }
 
+  if (!room) {
+    return <RoomNotFound />;
+  }
+
   return (
     <LiveKitRoom
       serverUrl={env.VITE_LIVEKIT_URL}
@@ -117,7 +129,7 @@ function RouteComponent() {
       connectOptions={{ autoSubscribe: true }}
       options={{ webAudioMix: false }}
     >
-      <RoomContent />
+      <RoomContent room={room} />
     </LiveKitRoom>
   );
 }
