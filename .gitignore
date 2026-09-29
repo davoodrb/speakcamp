@@ -13,4 +13,6 @@ dist-ssr
 __unconfig*
 
 src/generated/
-livekit.yml
+compose.prod.yaml
+.agents/skills/
+livekit.yaml

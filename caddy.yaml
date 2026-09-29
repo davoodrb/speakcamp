@@ -1,0 +1,59 @@
+logging:
+  logs:
+    default:
+      level: INFO
+
+storage:
+  module: file_system
+  root: /data
+
+apps:
+  tls:
+    certificates:
+      automate:
+        - speakcamp.ir
+        - livekit.speakcamp.ir
+        - livekit-turn.speakcamp.ir
+
+  layer4:
+    servers:
+      main:
+        listen: [":443"]
+
+        routes:
+          # LiveKit TURN over TLS
+          - match:
+              - tls:
+                  sni:
+                    - "livekit-turn.speakcamp.ir"
+            handle:
+              - handler: tls
+              - handler: proxy
+                upstreams:
+                  - dial: ["127.0.0.1:5349"]
+
+          # LiveKit HTTP/WebSocket
+          - match:
+              - tls:
+                  sni:
+                    - "livekit.speakcamp.ir"
+            handle:
+              - handler: tls
+                connection_policies:
+                  - alpn: ["http/1.1"]
+              - handler: proxy
+                upstreams:
+                  - dial: ["127.0.0.1:7880"]
+
+          # SpeakCamp web application
+          - match:
+              - tls:
+                  sni:
+                    - "speakcamp.ir"
+            handle:
+              - handler: tls
+                connection_policies:
+                  - alpn: ["http/1.1"]
+              - handler: proxy
+                upstreams:
+                  - dial: ["127.0.0.1:3000"]

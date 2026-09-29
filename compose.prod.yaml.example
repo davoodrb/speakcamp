@@ -1,0 +1,26 @@
+include:
+  - compose.yaml
+
+services:
+  caddy:
+    image: livekit/caddyl4
+    command: run --config /etc/caddy.yaml --adapter yaml
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./caddy.yaml:/etc/caddy.yaml
+      - ./caddy_data:/data
+    depends_on:
+      - app
+      - livekit
+
+  app:
+    image: ghcr.io/davoodrb/speakcamp:latest
+    env_file:
+      - .env.production
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy

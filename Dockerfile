@@ -7,9 +7,8 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 FROM base AS deps
 WORKDIR /app
 
-COPY package.json pnpm-workspace.yaml .npmrc* ./
-
-RUN pnpm install
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /app
@@ -19,7 +18,6 @@ COPY . .
 ARG VITE_LIVEKIT_URL
 ENV VITE_LIVEKIT_URL=$VITE_LIVEKIT_URL
 
-RUN pnpm prisma generate
 RUN pnpm build
 
 FROM node:${NODE_VERSION} AS runner
