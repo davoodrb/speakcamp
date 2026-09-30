@@ -54,12 +54,12 @@ function ActivityStats() {
       <div className="space-y-4">
         <div className="grid grid-cols-3 gap-3">
           {["tile-1", "tile-2", "tile-3"].map((key) => (
-            <Skeleton key={key} className="h-24 rounded-xl" />
+            <Skeleton key={key} className="h-24" />
           ))}
         </div>
         <div className="space-y-2">
           {["row-1", "row-2", "row-3"].map((key) => (
-            <Skeleton key={key} className="h-14 rounded-xl" />
+            <Skeleton key={key} className="h-14" />
           ))}
         </div>
       </div>

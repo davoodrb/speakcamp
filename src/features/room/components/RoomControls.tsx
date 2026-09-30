@@ -54,7 +54,6 @@ function RoomControls({ onOpenChat, unreadCount }: RoomControlsProps) {
     <div className="flex justify-center items-center gap-2">
       <Button
         variant={isMuted ? "destructive" : "outline"}
-        className="rounded-full"
         onClick={handleToggleMic}
         disabled={isTogglingMic}
         aria-pressed={!isMuted}
@@ -66,22 +65,21 @@ function RoomControls({ onOpenChat, unreadCount }: RoomControlsProps) {
       </Button>
       <Button
         variant="outline"
-        className="relative rounded-full"
         onClick={onOpenChat}
         aria-label="Open chat"
         title="Open chat"
+        className="relative"
       >
         Chat
         <MessageSquareIcon />
         {unreadCount > 0 && (
-          <Badge className="absolute -top-2 -right-2 h-5 min-w-5 rounded-full px-1 tabular-nums">
+          <Badge className="absolute -top-2 -right-2 h-5 min-w-5 px-1 tabular-nums rounded-full">
             {unreadCount > 9 ? "9+" : unreadCount}
           </Badge>
         )}
       </Button>
       <Button
         variant="outline"
-        className="rounded-full"
         onClick={handleLeave}
         disabled={isLeaving}
         aria-label="Leave room"

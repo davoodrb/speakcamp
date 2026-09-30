@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { authClient } from "#/features/auth/lib/auth-client";
-import CreateRoomDialog from "#/features/room/components/CreateRoomDialog";
+import CreateRoomDrawer from "#/features/room/components/CreateRoomDrawer";
 import RoomsList from "#/features/room/components/RoomsList";
 import { roomQueries } from "#/features/room/queries/roomQueries";
 import { Spinner } from "#/shared/components/ui/spinner";
@@ -37,7 +37,7 @@ function Home() {
           return oldRooms;
         }
 
-        return [...oldRooms, room];
+        return [room, ...oldRooms];
       });
     });
     sse.addEventListener("delete", (e) => {
@@ -92,7 +92,7 @@ function Home() {
 
   return (
     <div className="max-w-xl mx-auto p-4 space-y-4">
-      <CreateRoomDialog
+      <CreateRoomDrawer
         isUserLoggedIn={!!session?.user}
         isLoading={isSessionLoading}
       />

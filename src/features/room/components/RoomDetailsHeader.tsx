@@ -23,11 +23,11 @@ function RoomDetailsHeader({
           {formatEnumLabel(language)}
         </h3>
 
-        <Badge className="rounded-full tracking-wider">
+        <Badge variant="secondary" className="tracking-wider">
           {formatEnumLabel(level)}
         </Badge>
 
-        <Badge variant="secondary" className="ml-auto tabular-nums">
+        <Badge variant="outline" className="ml-auto tabular-nums">
           {liveCount}/{maxParticipants}
         </Badge>
       </div>

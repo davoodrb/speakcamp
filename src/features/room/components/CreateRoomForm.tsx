@@ -34,7 +34,13 @@ import { createRoomFormSchema } from "../schemas";
 const languageValues = Object.values(Language);
 const levelValues = Object.values(Level);
 
-function CreateRoomForm() {
+function CreateRoomForm({
+  formId = "create-room-form",
+  showSubmitButton = true,
+}: {
+  formId?: string;
+  showSubmitButton?: boolean;
+}) {
   const router = useRouter();
 
   const form = useForm({
@@ -71,6 +77,7 @@ function CreateRoomForm() {
 
   return (
     <form
+      id={formId}
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();
@@ -221,10 +228,12 @@ function CreateRoomForm() {
           }}
         </form.Field>
       </FieldGroup>
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting && <Spinner />}
-        Create Room
-      </Button>
+      {showSubmitButton && (
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting && <Spinner />}
+          Create Room
+        </Button>
+      )}
     </form>
   );
 }

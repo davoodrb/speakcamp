@@ -27,22 +27,22 @@ function RoomCard({ room }) {
 
   return (
     <div className="relative flex flex-col gap-5 rounded-xl border border-border/60 bg-card p-5">
-      <div className="flex flex-col gap-2">
+      <div>
         <div className="flex items-center gap-2">
           <h3 className="text-base font-semibold tracking-tight">
             {formatEnumLabel(room.language)}
           </h3>
 
-          <Badge className="rounded-full tracking-wider">
+          <Badge variant="outline" className="tracking-wider">
             {formatEnumLabel(room.level)}
           </Badge>
 
           {isPending ? (
             <Skeleton className="ml-auto h-5 w-10 rounded-full" />
           ) : (
-            <Badge className="ml-auto" variant="secondary">
+            <span className="ml-auto text-xs">
               {participantCount}/{room.maxParticipants}
-            </Badge>
+            </span>
           )}
         </div>
 
