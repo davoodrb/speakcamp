@@ -5,9 +5,15 @@ import {
   useParticipantTracks,
 } from "@livekit/components-react";
 import { Track } from "livekit-client";
-import { MicOffIcon, VolumeXIcon } from "lucide-react";
+import {
+  Loader2Icon,
+  MicOffIcon,
+  VolumeXIcon,
+  WifiOffIcon,
+} from "lucide-react";
 import { useState } from "react";
 import ProfilePopover from "#/features/account/components/ProfilePopover";
+import { useParticipantConnectionStatus } from "#/features/room/hooks/useParticipantConnectionStatus";
 import { Avatar, AvatarFallback } from "#/shared/components/ui/avatar";
 import { Badge } from "#/shared/components/ui/badge";
 import { cn } from "#/shared/lib/utils";
@@ -25,6 +31,15 @@ function ParticipantCard() {
   );
   const track = audioTracks[0];
 
+  const connectionStatus = useParticipantConnectionStatus({
+    isSubscribed: track?.publication?.isSubscribed ?? false,
+    hasPublication: Boolean(track?.publication),
+    hasTrack: Boolean(track?.publication?.track),
+  });
+  const isRemote = participant.identity !== localParticipant.identity;
+  // Overlay-only-when-degraded, remotes-only: healthy state renders nothing.
+  const showConnectionOverlay = isRemote && connectionStatus !== "connected";
+
   const isOwner = participant.attributes?.role === "owner";
   const displayName = participant.name || participant.identity;
   const isSpeaking = participant.isSpeaking;
@@ -36,8 +51,37 @@ function ParticipantCard() {
       className={cn(
         "relative bg-muted p-4 flex flex-col items-center gap-4 w-xs rounded border",
         isSpeaking && "ring-2 ring-green-500",
+        showConnectionOverlay && "opacity-90",
       )}
     >
+      {showConnectionOverlay && (
+        <div className="absolute left-1/2 top-5 -translate-x-1/2">
+          <Badge
+            variant="outline"
+            role="status"
+            aria-live="polite"
+            className={cn(
+              "gap-1.5 tabular-nums",
+              connectionStatus === "connecting" &&
+                "border-amber-500/40 bg-amber-500/15 text-amber-600 dark:text-amber-400",
+              connectionStatus === "reconnecting" &&
+                "border-red-500/40 bg-red-500/15 text-red-600 dark:text-red-400",
+            )}
+          >
+            {connectionStatus === "connecting" ? (
+              <>
+                <Loader2Icon className="size-3.5 animate-spin" aria-hidden />
+                Connecting…
+              </>
+            ) : (
+              <>
+                <WifiOffIcon className="size-3.5" aria-hidden />
+                Reconnecting…
+              </>
+            )}
+          </Badge>
+        </div>
+      )}
       <div className="absolute left-5 top-5 flex items-center gap-2">
         {isRemotelyMuted && (
           <MicOffIcon className="size-5 text-muted-foreground" />
@@ -49,7 +93,7 @@ function ParticipantCard() {
 
       <div className="absolute right-5 top-5 flex gap-2">
         {isOwner && <Badge className="h-8">Owner</Badge>}
-        {participant.identity !== localParticipant.identity && (
+        {isRemote && (
           <ParticipantOptionsPopover volume={volume} setVolume={setVolume} />
         )}
       </div>
