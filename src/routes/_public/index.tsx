@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRightIcon } from "lucide-react";
 import { useEffect } from "react";
 import { authClient } from "#/features/auth/lib/auth-client";
 import CreateRoomDrawer from "#/features/room/components/CreateRoomDrawer";
@@ -92,6 +93,17 @@ function Home() {
 
   return (
     <div className="max-w-xl mx-auto p-4 space-y-4">
+      <Link
+        to="/whats-speakcamp"
+        className="flex items-center justify-between gap-3 rounded-lg bg-muted px-4 py-3 text-sm transition-colors hover:bg-muted/60"
+      >
+        <p className="text-muted-foreground">
+          <span className="font-medium text-foreground">New to SpeakCamp?</span>{" "}
+          Learn what it is and how it works.
+        </p>
+        <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" />
+      </Link>
+
       <CreateRoomDrawer
         isUserLoggedIn={!!session?.user}
         isLoading={isSessionLoading}

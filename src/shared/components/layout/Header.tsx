@@ -34,9 +34,9 @@ function Header({
         <div className="flex items-center">
           <ModeToggle />
           <Link
-            to="/contact"
+            to="/whats-speakcamp"
             className={buttonVariants({ variant: "ghost", size: "icon" })}
-            aria-label="Contact"
+            aria-label="What's SpeakCamp?"
           >
             <InfoIcon className="size-4" />
           </Link>

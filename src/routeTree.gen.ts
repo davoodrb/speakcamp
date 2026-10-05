@@ -14,7 +14,7 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AthenticatedAccountRouteImport } from './routes/_athenticated/account'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as PublicContactRouteImport } from './routes/_public/contact'
+import { Route as PublicWhatsSpeakcampRouteImport } from './routes/_public/whats-speakcamp'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AthenticatedRoomIdRouteImport } from './routes/_athenticated/room.$id'
@@ -45,9 +45,9 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PublicRoute,
 } as any)
-const PublicContactRoute = PublicContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
+const PublicWhatsSpeakcampRoute = PublicWhatsSpeakcampRouteImport.update({
+  id: '/whats-speakcamp',
+  path: '/whats-speakcamp',
   getParentRoute: () => PublicRoute,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
@@ -85,7 +85,7 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/account': typeof AthenticatedAccountRoute
-  '/contact': typeof PublicContactRoute
+  '/whats-speakcamp': typeof PublicWhatsSpeakcampRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/': typeof AuthIndexRoute
   '/room/$id': typeof AthenticatedRoomIdRoute
@@ -96,7 +96,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/account': typeof AthenticatedAccountRoute
-  '/contact': typeof PublicContactRoute
+  '/whats-speakcamp': typeof PublicWhatsSpeakcampRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth': typeof AuthIndexRoute
   '/room/$id': typeof AthenticatedRoomIdRoute
@@ -110,7 +110,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/_athenticated/account': typeof AthenticatedAccountRoute
-  '/_public/contact': typeof PublicContactRoute
+  '/_public/whats-speakcamp': typeof PublicWhatsSpeakcampRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/_public/': typeof PublicIndexRoute
   '/auth/': typeof AuthIndexRoute
@@ -125,7 +125,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/account'
-    | '/contact'
+    | '/whats-speakcamp'
     | '/auth/sign-up'
     | '/auth/'
     | '/room/$id'
@@ -136,7 +136,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
-    | '/contact'
+    | '/whats-speakcamp'
     | '/auth/sign-up'
     | '/auth'
     | '/room/$id'
@@ -149,7 +149,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/auth'
     | '/_athenticated/account'
-    | '/_public/contact'
+    | '/_public/whats-speakcamp'
     | '/auth/sign-up'
     | '/_public/'
     | '/auth/'
@@ -205,11 +205,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/contact': {
-      id: '/_public/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof PublicContactRouteImport
+    '/_public/whats-speakcamp': {
+      id: '/_public/whats-speakcamp'
+      path: '/whats-speakcamp'
+      fullPath: '/whats-speakcamp'
+      preLoaderRoute: typeof PublicWhatsSpeakcampRouteImport
       parentRoute: typeof PublicRoute
     }
     '/auth/': {
@@ -272,12 +272,12 @@ const AthenticatedRouteWithChildren = AthenticatedRoute._addFileChildren(
 )
 
 interface PublicRouteChildren {
-  PublicContactRoute: typeof PublicContactRoute
+  PublicWhatsSpeakcampRoute: typeof PublicWhatsSpeakcampRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
-  PublicContactRoute: PublicContactRoute,
+  PublicWhatsSpeakcampRoute: PublicWhatsSpeakcampRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
 
